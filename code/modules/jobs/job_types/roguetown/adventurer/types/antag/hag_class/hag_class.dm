@@ -58,7 +58,11 @@
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/psila
 	beltr = /obj/item/roguekey/hag
 	backpack_contents = list(
-		/obj/item/handmirror = 1
+		/obj/item/handmirror = 1,
+		// TA ADDITION START
+		/obj/item/chalk = 1,
+		/obj/item/ritechalk = 1,
+		// TA ADDITION END
 	)
 	if(H.mind)
 		add_verb(H, /mob/living/carbon/human/proc/commune_with_roots)
@@ -88,12 +92,20 @@
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/caring_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/rooted_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/creeping_moss)
+		// TA ADDITION START
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/altered_moss)
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/forest_moss)
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/secret_moss)
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/rage_moss)
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/power_moss)
+		// TA ADDITION END
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/vibrant_moss)
 
 		// High Rarity
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/prismatic_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/gilded_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/drowned_moss)
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/boned_moss) // TA ADDITION
 
 		// Items
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/wyrd_axe)
@@ -103,7 +115,7 @@
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/lux_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/wyrd_mirror)
 
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
+		// TA REMOVAL: H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/spiritual_siphon)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/transmutation_rite)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/grant_boon)
@@ -111,11 +123,16 @@
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/mindlink/hag)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/take_name)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/possess_vessel)
-		H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/female/hag]
-		H.dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/male/hag]
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/feytouch) // TA ADDITION
+		H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/hag] // TA EDIT - ORIGINAL: GLOB.voice_packs[/datum/voicepack/female/hag]
+		H.dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/female/hag] // TA EDIT - ORIGINAL: GLOB.voice_packs[/datum/voicepack/male/hag]
 		if(!H.mind.has_antag_datum(/datum/antagonist/hag))
 			var/datum/antagonist/new_antag = new /datum/antagonist/hag()
 			H.mind.add_antag_datum(new_antag)
+		// TA ADDITION START
+		var/datum/devotion/C = new /datum/devotion(H, H.patron)
+		C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)
+		// TA ADDITION END
 
 /datum/antagonist/hag
 	name = "Hag"

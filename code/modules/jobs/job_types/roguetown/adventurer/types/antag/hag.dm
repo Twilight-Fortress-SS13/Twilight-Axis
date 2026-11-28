@@ -33,14 +33,14 @@
 		/datum/virtue/combat/dualwielder, //Hags are too powerful, abusable
 		/datum/virtue/combat/combat_virtue, //They do not need shield skills or anything in here
 		/datum/virtue/utility/notable, //No resident (????) or free-money-stash hags
-		/datum/virtue/utility/socialite, // Not intended to be residents
+		// TA REMOVAL - ORIGINAL: /datum/virtue/utility/socialite, // Not intended to be residents
 		/datum/virtue/utility/bronzelimbs, //They should feel pain in their limbs given their state
 		/datum/virtue/movement/acrobatic, //This should be given to them when they are actually after a Hunted
 		/datum/virtue/utility/woodwalker, //This should be given to them when they are actually after a Hunted
 		/datum/virtue/utility/feytouched, // They are already FAE
 		/datum/virtue/utility/riding, // Hags literally get a teleportation mechanic, it doesn't make much sense.
 		)
-	quirk_restrictions = list(/datum/quirk/noble, /datum/quirk/feytouched)
+	quirk_restrictions = list(/datum/quirk/noble) // TA EDIT - ORIGINAL: quirk_restrictions = list(/datum/quirk/noble, /datum/quirk/feytouched)
 	vice_restrictions = list(/datum/charflaw/hunted, /datum/charflaw/targeted, /datum/charflaw/wanted, /datum/charflaw/forlorne) // could you fucking imagine
 	job_subclasses = list(
 		/datum/advclass/hag,
@@ -85,6 +85,8 @@
 	if(ishuman(H))
 		var/mob/living/carbon/human/Hu = H
 		Hu.verbs += /mob/living/carbon/human/verb/hold_breath
+		Hu.verbs += /mob/living/carbon/human/verb/emote_hag_cackle
+		Hu.verbs += /mob/living/carbon/human/verb/emote_hag_laugh
 
 /mob/living/carbon/human/verb/hold_breath()
 	set name = "Задержать дыхание"
@@ -111,4 +113,38 @@
 			span_notice("Ты задерживаешь свое дыхание.")
 		)
 
+
+/datum/emote/living/hag_cackle
+	key = "hag_cackle"
+	key_third_person = "злобно хихикает"
+	message_muffled = "злобно хихикает!"
+	emote_type = EMOTE_AUDIBLE
+	nomsg = TRUE
+	show_runechat = FALSE
+
+/mob/living/carbon/human/verb/emote_hag_cackle()
+	set name = "Хихиканье карги"
+	set category = "Emotes.Noises"
+
+	if(!mind || mind.assigned_role != "Hag")
+		return
+
+	emote("hag_cackle", intentional = TRUE)
+
+/datum/emote/living/hag_laugh
+	key = "hag_laugh"
+	key_third_person = "злобно смеётся"
+	message_muffled = "злобно смеётся!"
+	emote_type = EMOTE_AUDIBLE
+	nomsg = TRUE
+	show_runechat = FALSE
+
+/mob/living/carbon/human/verb/emote_hag_laugh()
+	set name = "Смех карги"
+	set category = "Emotes.Noises"
+
+	if(!mind || mind.assigned_role != "Hag")
+		return
+
+	emote("hag_laugh", intentional = TRUE)
 // TA EDIT END

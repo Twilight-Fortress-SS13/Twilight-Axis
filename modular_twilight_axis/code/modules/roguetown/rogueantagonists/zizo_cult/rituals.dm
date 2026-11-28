@@ -534,10 +534,10 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(istiefling(target) || isdullahan(target)) //TA EDIT
 		to_chat(user, span_danger("Его люкс инфернальный. Это не сработает."))
 		return FALSE
-	if(isaasimar(target) && !(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYTOUCHED)))
+	if(isaasimar(target) && !(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYBOUND))) // TA EDIT - ORIGINAL: if(isaasimar(target) && !(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYTOUCHED)))
 		new /obj/item/reagent_containers/lux(target.loc)
 		apply_greater = TRUE
-	else if(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYTOUCHED))
+	else if(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYBOUND)) // TA EDIT - ORIGINAL: else if(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYTOUCHED))
 		new /obj/item/reagent_containers/lux_moss(target.loc)
 	else
 		new /obj/item/reagent_containers/lux_impure(target.loc)

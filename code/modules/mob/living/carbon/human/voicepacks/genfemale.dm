@@ -204,4 +204,8 @@
 				used = list('modular_twilight_axis/sound/misc/vo/female/gen/softmoan.ogg')
 			if("moan")
 				used = list('modular_twilight_axis/sound/misc/vo/female/gen/moan.ogg')
+			if("hag_cackle")
+				used = list('sound/hag/hag_cackles_short.ogg')
+			if("hag_laugh")
+				used = list('sound/hag/hag_cackles.ogg')
 	return used

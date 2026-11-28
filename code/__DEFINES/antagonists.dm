@@ -71,4 +71,4 @@
 /// Mammon worth of Vheslie goods one psilen buys through the Boon Menu.
 #define RENEGADE_PSILEN_WORTH 10
 /// Jobs that can never roll Renegade.
-#define RENEGADE_BLACKLISTED_ROLES list("Wretch", "Mercenary", "Adventurer", "Marshal", "Grand Duke", "Bishop")
+#define RENEGADE_BLACKLISTED_ROLES list("Wretch", "Mercenary", "Adventurer", "Marshal", "Grand Duke", "Bishop", "Hag") // TA EDIT - ORIGINAL: ("Wretch", "Mercenary", "Adventurer", "Marshal", "Grand Duke", "Bishop")

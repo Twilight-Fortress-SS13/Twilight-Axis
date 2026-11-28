@@ -337,7 +337,7 @@
 
 		qdel(W)
 		var/counts_as_pure = FALSE
-		if(HAS_TRAIT(user, TRAIT_FEYTOUCHED) && !HAS_TRAIT(user, TRAIT_ROOT_WALKER)) // this is our first offering, so it counts as pure bcs this is PROBABLY a leechtick. doesn't give bogwalker though you do need real lux for that
+		if(HAS_TRAIT(user, TRAIT_FEYBOUND) && !HAS_TRAIT(user, TRAIT_ROOT_WALKER)) // TA EDIT - ORIGINAL: if(HAS_TRAIT(user, TRAIT_FEYTOUCHED) && !HAS_TRAIT(user, TRAIT_ROOT_WALKER)) // this is our first offering, so it counts as pure bcs this is PROBABLY a leechtick. doesn't give bogwalker though you do need real lux for that
 			counts_as_pure = TRUE
 		check_fey_ascension(!is_impure, user)
 		feed_the_network((is_impure || counts_as_pure), user)
@@ -372,9 +372,9 @@
 		// Determine roll count
 		var/rolls = 1
 		if(is_impure)
-			rolls = tree.mother_tree ? 2 : 1
+			rolls = tree.mother_tree ? 5 : 4 // TA EDIT - ORIGINAL 2 : 1
 		else
-			rolls = tree.mother_tree ? 5 : 2
+			rolls = tree.mother_tree ? 10 : 6 // TA EDIT - ORIGINAL 5 : 2
 		// Perform the rolls
 		for(var/i in 1 to rolls)
 			tree.roll_for_moss(is_impure)
@@ -540,6 +540,20 @@
 	boon_path = /datum/hag_boon/spell/find_riches
 	desc = "You really want this moss. It is yours, your prized possession!."
 	color = "#eca202"
+
+// TA ADDITION START
+/obj/item/alch/hag_moss/enchanted/gilded/Initialize(mapload)
+	. = ..()
+	var/probability = rand(1, 2)
+	switch(probability)
+		if(1)
+			boon_path = /datum/hag_boon/spell/find_riches
+			name = "Gilded Moss"
+		if(2)
+			boon_path = /datum/hag_boon/buff/gold_bless
+			name = "Gold Moss"
+
+// TA ADDITION END
 
 /obj/item/alch/hag_moss/enchanted/drowned
 	name = "Drowned Moss"

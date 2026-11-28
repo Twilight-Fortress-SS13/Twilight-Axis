@@ -23,7 +23,7 @@
 	added_traits = list(TRAIT_BEAUTIFUL_UNCANNY)
 	allowed_species = list(/datum/species/aasimar, /datum/species/dullahan, /datum/species/construct/metal, /datum/species/ooze)
 	allowed_virtues = list(/datum/virtue/combat/second_chance, /datum/virtue/utility/feytouched) // hacky, but w/e
-	allowed_quirks = list(/datum/quirk/feytouched)
+	// TA REMOVAL: allowed_quirks = list(/datum/quirk/feytouched)
 	ui_fa_icon = "person-rays"
 
 /datum/quirk/ugly
@@ -88,6 +88,8 @@
 	added_traits = list(TRAIT_NIHILIST)
 	ui_fa_icon = "skull"
 
+// TA REMOVAL START
+/*
 /datum/quirk/feytouched
 	name = "Feytouched"
 	desc = "While I may not be as changed as some, I'm bound by pact or nature to the hag's cause."
@@ -108,6 +110,9 @@
 		if(hag_mind.current)
 			to_chat(hag_mind.current, span_boldnotice("A familiar rhythm pulses in the roots... [recipient.real_name], a feytouched, is walking the lands this week."))
 	to_chat(recipient, span_boldnotice("The Mossmother's gaze lingers upon you. You are recognized by her daughters."))
+
+*/
+// TA REMOVAL END
 
 /datum/quirk/wellknown
 	name = "Well-known"

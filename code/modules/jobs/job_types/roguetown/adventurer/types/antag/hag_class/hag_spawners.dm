@@ -10,16 +10,26 @@
 		/obj/item/alch/hag_moss/enchanted/deathless	= 4,
 		/obj/item/alch/hag_moss/enchanted/corrosive	= 4,
 		/obj/item/alch/hag_moss/enchanted/sprouting	= 4,
+		/obj/item/alch/hag_moss/enchanted/power = 4, // TA ADDITION
 		// Mid Rarity Enchanted
 		/obj/item/alch/hag_moss/enchanted/random/mid = 3,
 		/obj/item/alch/hag_moss/enchanted/caring		= 2,
 		/obj/item/alch/hag_moss/enchanted/rooted		= 2,
 		/obj/item/alch/hag_moss/enchanted/creeping	= 2,
+		// TA ADDITION START
+		/obj/item/alch/hag_moss/enchanted/secret		= 2,
+		/obj/item/alch/hag_moss/enchanted/forest		= 2,
+		/obj/item/alch/hag_moss/enchanted/altered		= 2,
+		// TA ADDITION END
 		/obj/item/alch/hag_moss/enchanted/vibrant = 2,
 		// High Rarity Enchanted
 		/obj/item/alch/hag_moss/enchanted/random/high = 1,
 		/obj/item/alch/hag_moss/enchanted/gilded		= 1,
-		/obj/item/alch/hag_moss/enchanted/drowned		= 1
+		/obj/item/alch/hag_moss/enchanted/drowned		= 1,
+		// TA ADDITION START
+		/obj/item/alch/hag_moss/enchanted/rage			= 1,
+		/obj/item/alch/hag_moss/enchanted/boned			= 1,
+		// TA ADDITION END
 	)
 
 /obj/effect/spawner/lootdrop/hag/mothers_cache

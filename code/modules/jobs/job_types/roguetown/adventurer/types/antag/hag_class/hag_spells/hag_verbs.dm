@@ -86,7 +86,7 @@
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
 		if(H == src || H.stat == DEAD)
 			continue
-		if(!HAS_TRAIT(H, TRAIT_FEYTOUCHED))
+		if(!HAS_TRAIT(H, TRAIT_FEYBOUND)) // TA EDIT - ORIGINAL: if(!HAS_TRAIT(H, TRAIT_FEYTOUCHED))
 			continue
 		possible_targets[H.real_name] = H
 	if(!length(possible_targets))

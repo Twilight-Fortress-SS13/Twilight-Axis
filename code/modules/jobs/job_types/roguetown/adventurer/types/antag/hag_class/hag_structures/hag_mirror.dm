@@ -35,7 +35,7 @@
 		return
 
 	var/list/options = list("Style")
-	if(HAS_TRAIT(H, TRAIT_ANCIENT_HAG) || HAS_TRAIT(H, TRAIT_FEYTOUCHED))
+	if(HAS_TRAIT(H, TRAIT_ANCIENT_HAG) || HAS_TRAIT(H, TRAIT_FEYBOUND)) // TA EDIT - ORIGINAL: if(HAS_TRAIT(H, TRAIT_ANCIENT_HAG) || HAS_TRAIT(H, TRAIT_FEYTOUCHED))
 		options += "Scry"
 
 	var/choice = input(user, "What would you like to do?", "Wyrd Mirror") as null|anything in options

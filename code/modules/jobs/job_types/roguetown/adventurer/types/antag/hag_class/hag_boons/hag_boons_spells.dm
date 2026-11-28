@@ -16,6 +16,9 @@
 		// Miracles granted by hags don't care about devotion.
 		spell_inst.devotion_cost = 0
 		spell_inst.miracle = FALSE
+		// TA ADDITION START
+		spell_inst.req_items = list()
+		// TA ADDITION END
 	L.mind.AddSpell(spell_inst)
 	to_chat(L, span_notice("A strange, flickering knowledge of <b>[spell_inst.name]</b> takes root in your mind."))
 	return

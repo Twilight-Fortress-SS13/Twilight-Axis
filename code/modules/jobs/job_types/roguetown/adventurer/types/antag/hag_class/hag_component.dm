@@ -15,25 +15,38 @@
 		/obj/item/alch/hag_moss/lullaby = 5,
 		/obj/item/alch/hag_moss/pride = 5,
 		/obj/item/roguekey/hag = 1,
-		/obj/item/leechtick = 3,
-		/obj/item/leechtick_bloated = 3,
+		/obj/item/leechtick = 6, // TA EDIT - ORIGINAL: 3
+		/obj/item/leechtick_bloated = 6, // TA EDIT - ORIGINAL: 3
 	)
 	var/hag_tier = 1
 	var/static/list/curse_registry = list(
 		/datum/hag_boon/curse/rotting_touch = list("cost" = 1, "min_tier" = 1),
+		// TA ADDITION START
+		/datum/hag_boon/curse/awful_voice = list("cost" = 5, "min_tier" = 1),
+		/datum/hag_boon/curse/excommunicated = list("cost" = 30, "min_tier" = 1),
+		// TA ADDITION END
 		/datum/hag_boon/buff/curse/choking_moss = list("cost" = 40, "min_tier" = 1),
 		/datum/hag_boon/buff/curse/waterlogged = list("cost" = 25, "min_tier" = 1),
 		/datum/hag_boon/buff/curse/slumber = list("cost" = 20, "min_tier" = 1),
 		// Trait Curses - Tier 1 (1 - 50 points)
 		/datum/hag_boon/trait/curse/ugly = list("cost" = 10, "min_tier" = 1),
 		/datum/hag_boon/trait/curse/silver_weakness = list("cost" = 50, "min_tier" = 1),
+		// TA ADDITION START
+		/datum/hag_boon/trait/curse/sleepless = list("cost" = 50, "min_tier" = 1),
+		/datum/hag_boon/trait/curse/atheism = list("cost" = 50, "min_tier" = 1),
+		/datum/hag_boon/curse/asundered_mind = list("cost" = 50, "min_tier" = 1),
+		// TA ADDITION END
 		// Trait Curses - Tier 2 (51 - 75 points)
 		/datum/hag_boon/trait/curse/no_run = list("cost" = 60, "min_tier" = 2),
+		// TA ADDITION START
+		/datum/hag_boon/trait/curse/light_sensivity = list("cost" = 65, "min_tier" = 2),
+		// TA ADDITION END
 		/datum/hag_boon/trait/curse/critical_weakness = list("cost" = 75, "min_tier" = 2),
 		// Trait Curses - Tier 3 (76+ points)
 		/datum/hag_boon/trait/curse/no_spells = list("cost" = 100, "min_tier" = 3),
 		/datum/hag_boon/trait/curse/mute = list("cost" = 100, "min_tier" = 3),
-		/datum/hag_boon/trait/curse/no_defense = list("cost" = 100, "min_tier" = 3)
+		/datum/hag_boon/trait/curse/no_defense = list("cost" = 100, "min_tier" = 3),
+		/datum/hag_boon/trait/curse/pacifist = list("cost" = 100, "min_tier" = 3) // TA ADDITION
 	)
 	/// List of boon paths the hag has pre-prepared: [boon_path] = quantity
 	var/list/prepared_boons = list()
@@ -246,6 +259,10 @@
 		scar = new /datum/hag_boon/curse_scar(true_name, src, points)
 		name_list += scar
 	check_tier_upgrade()
+	// TA ADDITION START
+	var/mob/living/victim = find_target(true_name)
+	playsound(victim, 'sound/hag/hag_cackles.ogg', 100, FALSE)
+	// TA ADDITION END
 
 /datum/component/hag_curio_tracker/proc/check_tier_upgrade()
 	var/scar_60_count = 0
@@ -301,7 +318,7 @@
 	var/active_victims = 0
 	for(var/v_name in boon_registry)
 		var/mob/living/victim = find_target(v_name)
-		if(victim && HAS_TRAIT(victim, TRAIT_FEYTOUCHED))
+		if(victim && HAS_TRAIT(victim, TRAIT_FEYBOUND)) // TA EDIT - ORIGINAL: if(victim && HAS_TRAIT(victim, TRAIT_FEYTOUCHED))
 			continue // feytouched don't count against your cap since they're already bound and can only have up to 30 pts of boons max
 		var/has_real_boon = FALSE
 		for(var/datum/hag_boon/B in boon_registry[v_name])
@@ -317,17 +334,17 @@
 	var/max_points
 	switch(hag_tier)
 		if(1)
-			max_victims = 4
+			max_victims = 8 // TA EDIT - ORIGINAL: 4
 			max_points = 60
 		if(2)
-			max_victims = 5
+			max_victims = 10 // TA EDIT - ORIGINAL: 5
 			max_points = 85
 		else
-			max_victims = 6
-			max_points = 110
+			max_victims = 12 // TA EDIT - ORIGINAL: 6
+			max_points = 120 // TA EDIT - ORIGINAL: 110
 
 	var/mob/living/carbon/C = L
-	if(istype(C) && HAS_TRAIT(C, TRAIT_FEYTOUCHED))
+	if(istype(C) && HAS_TRAIT(C, TRAIT_FEYBOUND)) // TA EDIT - ORIGINAL: if(istype(C) && HAS_TRAIT(C, TRAIT_FEYTOUCHED))
 		max_points = C.extra_boon_budget
 
 	// Only block if we are trying to boon a NEW person and we're at the limit
@@ -399,18 +416,26 @@
 /datum/component/hag_curio_tracker/proc/antag_check(mob/living/carbon/C)
 	if(!C.mind)
 		return FALSE
-	if(C.mind.has_antag_datum(/datum/antagonist/vampire))
+	if(C.mind.has_antag_datum(/datum/antagonist/vampire/lord)) // TA EDIT - ORIGINAL: if(C.mind.has_antag_datum(/datum/antagonist/vampire))
 		return FALSE
 	if(C.mind.has_antag_datum(/datum/antagonist/werewolf))
 		return FALSE
+	// TA REMOVAL START
+	/*
 	if(C.mind.has_antag_datum(/datum/antagonist/gnoll))
 		return FALSE
+	*/
+	// TA REMOVAL END
 	if(C.mind.has_antag_datum(/datum/antagonist/hag))
 		return FALSE
-	if(C.mind.has_antag_datum(/datum/antagonist/skeleton))
+	if(C.mind.has_antag_datum(/datum/antagonist/lich)) // TA EDIT - ORIGINAL: if(C.mind.has_antag_datum(/datum/antagonist/skeleton))
 		return FALSE
+	// TA REMOVAL START
+	/*
 	if(C.mind.has_antag_datum(/datum/antagonist/assassin))
 		return FALSE
+	*/
+	// TA REMOVAL END
 	if(HAS_TRAIT(C, TRAIT_FEYBOUND) && !C.extra_boon_budget)
 		return FALSE
 	return TRUE
@@ -432,7 +457,7 @@
 	return TRUE
 
 /datum/component/hag_curio_tracker/proc/hag_teleport_check()
-	if(world.time < last_revive_time + 5 MINUTES)
+	if(world.time < last_revive_time + 2.5 MINUTES) // TA EDIT - ORIGINAL: if(world.time < last_revive_time + 5 MINUTES)
 		return FALSE
 	return TRUE
 
