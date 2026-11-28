@@ -1,14 +1,36 @@
+// К сожалению, мы не можем просто указать gem_socketable = TRUE в базовом классе,
+// иначе это унаследовал бы любой новый посох или донаторский скин от оффов.
+// Это решение может и не самое элегантное, но наиболее future-proof.
+GLOBAL_LIST_INIT(socketable_staves, typecacheof(list(
+	/obj/item/rogueweapon/woodstaff/implement,
+	/obj/item/rogueweapon/woodstaff/implement/empty,
+	/obj/item/rogueweapon/woodstaff/implement/amethyst,
+	/obj/item/rogueweapon/woodstaff/implement/greater,
+	/obj/item/rogueweapon/woodstaff/implement/greater/sapphire,
+	/obj/item/rogueweapon/woodstaff/implement/greater/quartz,
+	/obj/item/rogueweapon/woodstaff/implement/greater/ruby,
+	/obj/item/rogueweapon/woodstaff/implement/grand,
+	/obj/item/rogueweapon/woodstaff/implement/grand/riddle,
+	/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel,
+	/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/ruby,
+	/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/empty,
+), only_root_path = TRUE))
+
 /obj/item/rogueweapon/woodstaff/implement
-	gem_socketable = TRUE
 	starting_gem_type = /obj/item/roguegem/yellow
 	implement_noun = "staff"
 	desc = "A mage's staff with a setting for a focus-gem. The gem captures excess energy dissipated into the air when a spell is cast, giving a share of it back to the wielder."
-	implement_refund = 0
-	implement_tier = 0
 	force_wielded = 25
 
 	// Префикс модульных спрайтов "[gem_state_base]_[гем]"
 	var/gem_state_base
+	// Ключ набора рескинов в GLOB.staff_skins, безопасно наследуется оффовскими.
+	var/skin_set = "wooden"
+
+/obj/item/rogueweapon/woodstaff/implement/Initialize(mapload)
+	// См. причину в начале файла
+	gem_socketable = !!GLOB.socketable_staves[type]
+	return ..()
 
 /obj/item/rogueweapon/woodstaff/implement/apply_gem_stats(list/stats)
 	implement_refund = stats ? stats["refund"] : 0
@@ -65,6 +87,7 @@
 	icon = 'modular_twilight_axis/icons/obj/items/staffs.dmi'
 	icon_state = "blacksteelstaff_diamond"
 	gem_state_base = "blacksteelstaff"
+	skin_set = null  // Пока у нас нет скинов на черносталь
 	starting_gem_type = /obj/item/roguegem/diamond
 	implement_noun = "blacksteel staff"
 	desc = "A fine wood staff reinforced with blacksteel rivets and furnishings, carried by War-Magos who graduated from the Celestial Academy of Magos. Its crown holds a focus-gem."
@@ -80,59 +103,8 @@
 	icon_state = "blacksteelstaff_gemless"
 	starting_gem_type = null
 
-// Все случаи посохов внизу рассматриваются как уникальные и не являются составными посохами
-
-// Посох придворного мага считается черносталевым с загадкой стали по умолчанию
+// Посох придворного мага считается черносталевым с загадкой стали по умолчанию,
+// однако было решено оставить его уникальным несоставным посохом.
 /obj/item/rogueweapon/woodstaff/implement/grand/magos
-	gem_socketable = FALSE
-	starting_gem_type = null
-	implement_tier = 3
-	implement_refund = IMPLEMENT_REFUND_RIDDLE
 	force_wielded = 30
 	max_integrity = 300
-
-/obj/item/rogueweapon/woodstaff/implement/grand/naledi
-	gem_socketable = FALSE
-	starting_gem_type = null
-	implement_tier = 2
-	implement_refund = IMPLEMENT_REFUND_RONTZ
-
-/obj/item/rogueweapon/scabbard/sheath/courtphysician/hand
-	implement_tier = 2
-	implement_refund = IMPLEMENT_REFUND_RONTZ
-
-// Посохи-фамильяры
-
-/obj/item/rogueweapon/woodstaff/implement/greater/elemental
-	unenchantable = TRUE  // Иначе чары потеряются при обратном обращении
-	gem_socketable = FALSE
-	starting_gem_type = null
-	implement_tier = 2
-	implement_refund = IMPLEMENT_REFUND_BLORTZ
-
-/obj/item/rogueweapon/woodstaff/implement/greater/infernal
-	unenchantable = TRUE  // Иначе чары потеряются при обратном обращении
-	gem_socketable = FALSE
-	starting_gem_type = null
-	implement_tier = 2
-	implement_refund = IMPLEMENT_REFUND_RONTZ
-
-// Донатерские рескины
-
-/obj/item/rogueweapon/woodstaff/implement/morto
-	gem_socketable = FALSE
-	starting_gem_type = null
-	implement_tier = 1
-	implement_refund = IMPLEMENT_REFUND_TOPER
-
-/obj/item/rogueweapon/woodstaff/implement/racobio
-	gem_socketable = FALSE
-	starting_gem_type = null
-	implement_tier = 1
-	implement_refund = IMPLEMENT_REFUND_TOPER
-
-/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn
-	gem_socketable = FALSE
-	starting_gem_type = null
-	implement_tier = 3
-	implement_refund = IMPLEMENT_REFUND_DORPEL
