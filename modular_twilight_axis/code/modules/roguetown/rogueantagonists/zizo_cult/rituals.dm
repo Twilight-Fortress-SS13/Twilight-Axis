@@ -1645,3 +1645,19 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 
 	new /obj/item/rogueweapon/halberd/glaive/zizo(center)
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/cult_zgreatsword
+	name = "Создание двуручного меча Зизо"
+	desk = "Преобразует двуручный меч в проклятый двуручный меч Зизо."
+	center_requirement = /obj/item/rogueweapon/greatsword
+
+	e_req = /obj/item/ingot/steel/zizo
+	w_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/cult_zgreatsword/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/greatsword/zizo(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)

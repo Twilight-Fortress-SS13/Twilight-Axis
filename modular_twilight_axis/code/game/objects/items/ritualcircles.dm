@@ -365,6 +365,7 @@
 		if(/datum/patron/inhumen/zizo)
 			weapon_options = list(
 				"Avantyne Longsword" = image(icon = 'icons/roguetown/weapons/swords64.dmi', icon_state = "zizosword"),
+				"Cursed Greatsword" = image(icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi', icon_state = "zgtsword"),
 				"Avantyne Sword and Shield" = image(icon = 'icons/roguetown/weapons/swords32.dmi', icon_state = "zizoarming"),
 				"Avantyne Rapier" = image(icon = 'icons/roguetown/weapons/swords64.dmi', icon_state = "zizorapier"),
 				"Cursed Axe and Shield" = image(icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi', icon_state = "Zaxe"),
@@ -380,7 +381,7 @@
 			)
 	if(!length(weapon_options))
 		return null
-	return show_radial_menu(user, anchor, weapon_options, radius = patron_type == /datum/patron/inhumen/zizo ? 56 : 32, require_near = TRUE, tooltips = TRUE)
+	return show_radial_menu(user, anchor, weapon_options, radius = patron_type == /datum/patron/inhumen/zizo ? 64 : 32, require_near = TRUE, tooltips = TRUE)
 
 /datum/outfit/job/roguetown/darksteelrite
 	var/ta_weapon_choice
@@ -394,13 +395,16 @@
 			l_hand = null
 		if("Avantyne Sword and Shield")
 			r_hand = /obj/item/rogueweapon/sword/zizo
-			l_hand = /obj/item/rogueweapon/shield/tower/metal/zizo
+			l_hand = /obj/item/rogueweapon/shield/kite/zizo
+		if("Cursed Greatsword")
+			r_hand = /obj/item/rogueweapon/greatsword/zizo
+			l_hand = null
 		if("Avantyne Rapier")
 			r_hand = /obj/item/rogueweapon/sword/rapier/avantyne
 			l_hand = null
 		if("Cursed Axe and Shield")
 			r_hand = /obj/item/rogueweapon/stoneaxe/battle/zizo
-			l_hand = /obj/item/rogueweapon/shield/tower/metal/zizo
+			l_hand = /obj/item/rogueweapon/shield/kite/zizo
 			ta_weapon_skill = /datum/skill/combat/axes
 		if("Cursed Greataxe")
 			r_hand = /obj/item/rogueweapon/greataxe/steel/doublehead/zizo
@@ -416,7 +420,7 @@
 			ta_weapon_skill = /datum/skill/combat/polearms
 		if("Cursed Mace and Shield")
 			r_hand = /obj/item/rogueweapon/mace/steel/zizo
-			l_hand = /obj/item/rogueweapon/shield/tower/metal/zizo
+			l_hand = /obj/item/rogueweapon/shield/kite/zizo
 			ta_weapon_skill = /datum/skill/combat/maces
 
 /datum/outfit/job/roguetown/viciousrite

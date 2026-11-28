@@ -996,3 +996,87 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 
 /obj/item/clothing/wrists/roguetown/bracers/zizo/rite_light
 	armor_class = ARMOR_CLASS_LIGHT
+
+/obj/item/rogueweapon/greatsword/zizo
+	name = "cursed greatsword"
+	desc = "A massive two-handed sword reforged with cursed steel in the name of Zizo."
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi'
+	icon_state = "zgtsword"
+	force = 18
+	force_wielded = 42
+	wdefense = 6
+	minstr = 10
+	max_blade_int = 400
+	max_integrity = 350
+	sellprice = 80
+	gripped_intents = list(/datum/intent/sword/cut/zwei, /datum/intent/sword/thrust/zwei, /datum/intent/rend, /datum/intent/sword/chop)
+	special = /datum/special_intent/zizo_ruinous_verdict
+	smeltresult = /obj/item/ingot/steel/zizo
+
+/obj/item/rogueweapon/greatsword/zizo/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "SWORD")
+
+/obj/item/rogueweapon/greatsword/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
+
+/datum/special_intent/zizo_ruinous_verdict
+	name = "Ruinous Verdict"
+	desc = "Deliver a heavy overhead cut against the first foe in a two-tile line ahead. High armor penetration. Requires a two-handed grip and staying on the starting tile until the strike lands. Aims for the targeted zone."
+	tile_coordinates = list(list(0,0), list(0,1))
+	post_icon_state = "strike"
+	sfx_pre_delay = 'sound/combat/wooshes/bladed/wooshlarge (3).ogg'
+	sfx_post_delay = 'sound/combat/sp_gsword_hit.ogg'
+	requires_wielding = TRUE
+	special_armor_penetration = PEN_HEAVY
+	delay = 0.7 SECONDS
+	cooldown = 30 SECONDS
+	stamcost = 25
+	range = 2
+	var/turf/attack_origin
+	var/turf/attack_front
+	var/has_hit = FALSE
+
+/datum/special_intent/zizo_ruinous_verdict/npc_use_chance(mob/living/user, atom/target)
+	return npc_line_chance(user, 2)
+
+/datum/special_intent/zizo_ruinous_verdict/on_create()
+	. = ..()
+	attack_origin = get_turf(howner)
+	attack_front = get_step(attack_origin, howner.dir)
+	has_hit = FALSE
+	howner.apply_status_effect(/datum/status_effect/debuff/clickcd, delay)
+
+/datum/special_intent/zizo_ruinous_verdict/post_delay(list/turfs)
+	var/turf/origin = attack_origin
+	var/turf/front = attack_front
+	attack_origin = null
+	attack_front = null
+	var/obj/item/rogueweapon/W = iparent
+	if(QDELETED(howner) || QDELETED(W) || howner.stat || howner.incapacitated() || !(howner.mobility_flags & MOBILITY_STAND))
+		return
+	if(howner.get_active_held_item() != W || !W.wielded || W.obj_broken || get_turf(howner) != origin)
+		return
+	if(!front || front.density || !(front in turfs))
+		return
+	var/list/visible_turfs = view(2, howner)
+	if(!(front in visible_turfs))
+		return
+	var/list/valid_turfs = list(front)
+	for(var/turf/T in turfs)
+		if(T != front && !T.density && (T in visible_turfs))
+			valid_turfs += T
+	. = ..(valid_turfs)
+
+/datum/special_intent/zizo_ruinous_verdict/apply_hit(turf/T)
+	var/obj/item/rogueweapon/W = iparent
+	var/dam = W.force_dynamic * 1.6 * max(howner.STASTR / 10, 0.5)
+	if(has_hit)
+		return ..()
+	for(var/mob/living/L in T)
+		if(L == howner || L.stat == DEAD)
+			continue
+		has_hit = TRUE
+		apply_generic_weapon_damage(L, dam, "slash", get_aimed_zone(L), bclass = BCLASS_CUT)
+		break
+	..()
