@@ -27,7 +27,6 @@
 	)
 	same_job_respawn_delay = 30 MINUTES
 
-
 /datum/job/roguetown/azeb/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	. = ..()
 	if(ishuman(L))
@@ -45,10 +44,17 @@
 	backr = /obj/item/storage/backpack/rogue/satchel
 	id = /obj/item/scomstone/bad/garrison
 	job_bitflag = BITFLAG_GARRISON
+	cloak = /obj/item/clothing/cloak/dunestalker
+	neck = /obj/item/clothing/neck/roguetown/coif/padded
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
+	gloves = /obj/item/clothing/gloves/roguetown/leather
+	belt = /obj/item/storage/belt/rogue/leather
+	head = /obj/item/clothing/head/roguetown/helmet/sallet/raneshen
+	mask = /obj/item/clothing/head/roguetown/roguehood/shalal/hijab/raneshen
 
 /datum/advclass/azeb/ranger
 	name = "Azeb Ranger"
-	tutorial = "Сколько Вы себя помните, Вы всегда были кем-то подвижным, слабым и хилым, поэтому в корпусе Азебов вас определили как стрелка. Вас научили управляться с дальнобойным оружием и скрываться во тьме."
+	tutorial = "Сколько Вы себя помните - Вы всегда были кем-то подвижным, слабым и хилым, поэтому в корпусе Азебов вас определили как стрелка. Вас научили управляться с дальнобойным оружием и скрываться во тьме."
 	outfit = /datum/outfit/job/roguetown/azeb/ranger
 	category_tags = list(CTAG_AZEB)
 	traits_applied = list(TRAIT_DODGEEXPERT)
@@ -84,17 +90,10 @@
 
 /datum/outfit/job/roguetown/azeb/ranger/pre_equip(mob/living/carbon/human/H)
 	..()
-	head = /obj/item/clothing/head/roguetown/helmet/sallet/raneshen
-	mask = /obj/item/clothing/head/roguetown/roguehood/shalal/hijab/raneshen
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/zyb
 	pants = /obj/item/clothing/under/roguetown/trou/leather/pontifex/raneshen
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/raneshen
-	cloak = /obj/item/clothing/cloak/dunestalker
 	shoes = /obj/item/clothing/shoes/roguetown/shalal/reinforced
-	gloves = /obj/item/clothing/gloves/roguetown/leather
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
-	belt = /obj/item/storage/belt/rogue/leather
-	neck = /obj/item/clothing/neck/roguetown/coif/padded
 	backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 	beltr = /obj/item/quiver/arrows
 	beltl = /obj/item/rogueweapon/huntingknife/idagger/steel
@@ -102,14 +101,14 @@
 		/obj/item/storage/keyring/azeb = 1,
 		/obj/item/flashlight/flare/torch/lantern = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/signal_horn = 1
+		/obj/item/signal_horn = 1,
 		)
 	H.verbs |= /mob/proc/haltyell
 	H.set_blindness(0)
 
 /datum/advclass/azeb/footman
 	name = "Azeb Footman"
-	tutorial = "Сколько Вы себя помните - Вы всегда управлялись с оружием ближнего боя. Конкретно в корпусе Азебов Вам вручили глефу, эффективное и простое оружие. Помимо этого, вас научили ездить верхом - и вручили личного скакуна. В долг, конечно же."
+	tutorial = "Сколько Вы себя помните - Вы всегда управлялись с оружием ближнего боя. Конкретно в корпусе Азебов вам вручили глефу, эффективное и простое оружие. Помимо этого, вас научили ездить верхом - и вручили личного скакуна. В долг, конечно же."
 	outfit = /datum/outfit/job/roguetown/azeb/footman
 	category_tags = list(CTAG_AZEB)
 	traits_applied = list(TRAIT_MEDIUMARMOR)
@@ -148,17 +147,10 @@
 
 /datum/outfit/job/roguetown/azeb/footman/pre_equip(mob/living/carbon/human/H)
 	..()
-	head = /obj/item/clothing/head/roguetown/helmet/sallet/raneshen
-	mask = /obj/item/clothing/head/roguetown/roguehood/shalal/hijab/raneshen
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen
 	pants = /obj/item/clothing/under/roguetown/chainlegs/iron
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass
-	cloak = /obj/item/clothing/cloak/dunestalker
 	shoes = /obj/item/clothing/shoes/roguetown/shalal
-	gloves = /obj/item/clothing/gloves/roguetown/leather
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
-	belt = /obj/item/storage/belt/rogue/leather
-	neck = /obj/item/clothing/neck/roguetown/coif/padded
 	backl = /obj/item/rogueweapon/scabbard/gwstrap
 	beltr = /obj/item/rogueweapon/sword/sabre
 	beltl = /obj/item/rogueweapon/huntingknife
@@ -166,8 +158,7 @@
 	backpack_contents = list(
 		/obj/item/storage/keyring/azeb = 1,
 		/obj/item/flashlight/flare/torch/lantern = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/signal_horn = 1
+		/obj/item/rogueweapon/scabbard/sheath = 1,,
 		)
 	H.verbs |= /mob/proc/haltyell
 	H.set_blindness(0)

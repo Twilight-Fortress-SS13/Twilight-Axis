@@ -72,6 +72,14 @@
 //	smooth_icon = 'icons/turf/walls/hardrock.dmi'
 	above_floor = /turf/closed/mineral/rogue/bedrock
 
+/turf/closed/mineral/rogue/bedrock/sandbrick
+	name = "sandstone"
+	desc = "Seems barren and nigh-indestructable"
+	icon = 'modular_deserttown/icons/sandstone.dmi'
+	icon_state = "sand-stone"
+//	smooth_icon = 'icons/turf/walls/hardrock.dmi'
+	above_floor = /turf/closed/mineral/rogue/bedrock
+
 /turf/closed/mineral/random/rogue/sandstone
 	name = "sandstone"
 	desc = "Dusty, sand-blasted rock."
@@ -188,3 +196,21 @@
 		/turf/closed/mineral/rogue/sandstone/tin = 12,
 		/turf/closed/mineral/rogue/sandstone/coal = 19,
 		/turf/closed/mineral/rogue/sandstone/gem = 3)
+
+/turf/closed/wall/mineral/rogue/claybrick
+	name = "claybrick wall"
+	desc = "A wall of smooth, unyielding bricks."
+	icon = 'modular_deserttown/icons/claybrick.dmi'
+	icon_state = "claybrick"
+	smooth = SMOOTH_MORE
+	blade_dulling = DULLING_BASH
+	max_integrity = 1800
+	break_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
+	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg', 'sound/combat/hits/onstone/wallhit2.ogg', 'sound/combat/hits/onstone/wallhit3.ogg')
+	canSmoothWith = list(/turf/closed/wall/mineral/rogue/claybrick)
+	above_floor = /turf/open/floor/rogue/darkpath
+	baseturfs = /turf/open/floor/rogue/darkpath
+	neighborlay = "dirtedge"
+	climbdiff = 3
+	damage_deflection = 10
+	hardness = 3

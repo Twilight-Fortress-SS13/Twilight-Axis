@@ -47,8 +47,8 @@
 
 /datum/advclass/janissarysergeant/janissarysergeant
 	name = "Sergeant"
-	tutorial = "You are the most experienced of the SULTAN's Soldiery, leading the Janissary in maintaining order and attending to threats and crimes below the PALACE's attention. \
-				See to those under your command and fill in the gaps CATAPHRACTS leave in their wake. Obey the orders of your Marshal and the SULTAN."
+	tutorial = "Ты — один из самых опытных воинов Султанской гвардии, ведущий янычар в поддержании порядка и борьбе с угрозами, которые еще не достигли внимания Дворца. \
+        Следи за теми, кто находится под твоим командованием, и заполняй пробелы, которые оставляют после себя Фарисы. Повинуйся приказам своего Мушира и Султана."
 	outfit = /datum/outfit/job/roguetown/janissarysergeant/janissarysergeant
 
 	category_tags = list(CTAG_JANISSARYSERGEANT)
@@ -117,6 +117,7 @@
 				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 				r_hand = /obj/item/rogueweapon/sword/sabre
 				beltl = /obj/item/rogueweapon/scabbard/sword
+
 /datum/job/roguetown/janissarysergeant/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
 	if(ishuman(L))
@@ -139,6 +140,3 @@
 						new_origin = pick(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian)
 					var/datum/virtue/origin/applied_origin = new new_origin()
 					player.prefs.virtue_origin = applied_origin
-/obj/item/clothing/cloak/catcloak/jancap
-	name = "janissary sergeant's cloak"
-	desc = "A most handsome cloak, of royal red, denoting the authority of a leader."

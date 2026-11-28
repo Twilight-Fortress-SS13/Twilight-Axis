@@ -43,6 +43,7 @@
 	animal_species = /mob/living/simple_animal/hostile/retaliate/rogue/camel
 	ai_controller = /datum/ai_controller/generic/retaliate
 	move_base_delay = 8
+	ride_move_delay = 8
 
 	botched_butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/steak = 2,
 						/obj/item/natural/hide = 2)

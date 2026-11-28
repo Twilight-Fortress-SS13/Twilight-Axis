@@ -42,13 +42,6 @@
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
 	pants = /obj/item/clothing/under/roguetown/chainlegs/kilt
 	beltl = /obj/item/rogueweapon/whip
-	backpack_contents = list(
-		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
-		/obj/item/rope/chain = 1,
-		/obj/item/storage/keyring/manatarms = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
-		)
 
 	H.adjust_blindness(-3)
 	if(H.mind)

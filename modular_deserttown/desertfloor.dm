@@ -233,7 +233,7 @@
 /turf/open/floor/rogue/dirt/desert
 	icon = 'modular_deserttown/icons/desertfloor.dmi'
 	track_prob = 15
-	
+
 /turf/open/floor/rogue/dirt/desert/nospawn
 
 /turf/open/floor/rogue/dirt/road/desert
@@ -271,4 +271,108 @@
 	canSmoothWith = list(/turf/open/floor/rogue,
 						/turf/closed/mineral,
 						/turf/closed/wall/mineral)
-	track_prob = 5
+	track_prob = 10
+
+/turf/open/floor/rogue/deserttempletile
+	icon_state = "temple_floor"
+	icon = 'modular_deserttown/icons/temple.dmi'
+	footstep = FOOTSTEP_STONE
+	barefootstep = FOOTSTEP_HARD_BAREFOOT
+	clawfootstep = FOOTSTEP_HARD_CLAW
+	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
+	landsound = 'sound/foley/jumpland/stoneland.wav'
+	smooth = SMOOTH_MORE
+	canSmoothWith = list(/turf/closed/mineral/rogue, /turf/closed/mineral, /turf/closed/wall/mineral/rogue/stonebrick, /turf/closed/wall/mineral/rogue/wood, /turf/closed/wall/mineral/rogue/wooddark, /turf/closed/wall/mineral/rogue/stone, /turf/closed/wall/mineral/rogue/stone/moss, /turf/open/floor/rogue/cobble, /turf/open/floor/rogue/dirt, /turf/open/floor/rogue/grass)
+	damage_deflection = 10
+	max_integrity = 1000
+	break_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
+	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg', 'sound/combat/hits/onstone/wallhit2.ogg', 'sound/combat/hits/onstone/wallhit3.ogg')
+	abstract_type = /turf/open/floor/rogue/deserttempletile
+	track_prob = 10
+
+/turf/open/floor/rogue/deserttempletile/stair
+	icon_state = "temple_stairs"
+
+/turf/open/floor/rogue/deserttempletile/stairinside
+	icon_state = "temple_stairs_inner"
+
+/turf/open/floor/rogue/deserttempletile/stairoutside
+	icon_state = "temple_stairs_outer"
+
+/turf/open/floor/rogue/deserttempletile/stairend
+	icon_state = "temple_stairs_end"
+
+/turf/open/floor/rogue/deserttempletile/stairendflipped
+	icon_state = "temple_stairs_end_flipped"
+
+/turf/open/floor/rogue/deserttempletile/border
+	icon_state = "temple_border"
+
+/obj/effect/decal/deserttemplehole
+	icon = 'modular_deserttown/icons/temple.dmi'
+	icon_state = "temp_floor_hole"
+	anchored = TRUE
+
+/obj/effect/decal/deserttempleedge
+	icon = 'modular_deserttown/icons/temple.dmi'
+	icon_state = "temp_floor_edge"
+	anchored = TRUE
+
+/turf/open/floor/rogue/crimsondunes
+	name = "sand"
+	desc = "Its course and rough, and it gets everywhere."
+	icon = 'modular_deserttown/icons/desertfloor.dmi'
+	icon_state = "crimsondune1"
+	footstep = FOOTSTEP_SAND
+	//barefootstep = FOOTSTEP_SAND
+	//clawfootstep = FOOTSTEP_SAND
+	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
+	landsound = 'sound/foley/jumpland/dirtland.wav'
+	smooth = SMOOTH_TRUE
+	canSmoothWith = list(
+						/turf/open/floor/rogue/grass,
+						/turf/open/floor/rogue/desert_grass,
+						/turf/open/floor/rogue/dirt,
+						/turf/open/floor/rogue/dirt/road,
+						/turf/open/floor/rogue/dirt/desert,
+						/turf/open/floor/rogue/dirt/road/desert,
+						/turf/open/floor/rogue/citybrick,
+						/turf/open/floor/rogue/cobble,
+						/turf/open/floor/rogue/cobblerock,
+						/turf/open/floor/rogue/cobble/mossy,
+						/turf/open/floor/rogue/grassred,
+						/turf/open/floor/rogue/grassyel,
+						/turf/open/floor/rogue/grasscold,
+						/turf/open/floor/rogue/grassgrey,
+						/turf/open/floor/rogue/grasspurple,
+						/turf/open/floor/rogue/snowpatchy,
+						/turf/open/floor/rogue/snow,
+						/turf/open/floor/rogue/snowrough,)
+	// slowdown = 1
+	// neighborlay = "duneedge"
+	track_prob = 10
+
+/turf/open/floor/rogue/crimsondunes/cardinal_smooth(adjacencies)
+	roguesmooth(adjacencies)
+
+/turf/open/floor/rogue/crimsondunes/Initialize(mapload)
+	. = ..()
+	dir = pick(GLOB.cardinals)
+	icon_state = "crimsondune[rand(1,16)]"
+
+/turf/open/water/swamp/crimson
+	name = "crimson water"
+	desc = "The water has a red tint, how strange."
+	water_color = "#7c1c1c"
+	freeze_type = null
+
+
+/turf/open/water/swamp/crimson/Initialize(mapload)
+	icon_state = "dirt"
+	dir = pick(GLOB.cardinals)
+	water_color = pick("#7c1c1c")
+	.	= ..()
+
+/turf/open/water/swamp/crimson/nofish
+	fishing_datum = null
+
