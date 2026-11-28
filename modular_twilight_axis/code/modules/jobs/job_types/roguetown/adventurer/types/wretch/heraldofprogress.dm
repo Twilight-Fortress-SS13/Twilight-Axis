@@ -50,7 +50,7 @@
 	belt = /obj/item/storage/belt/rogue/leather/tossbelt/blade/iron
 	beltr  = /obj/item/rogueweapon/huntingknife/idagger/steel
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless_leather
-	id = /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult
+	id = /obj/item/clothing/neck/roguetown/psicross/inhumen/ancient/decrepit/cult
 	shoes = /obj/item/clothing/shoes/roguetown/boots/maille/iron
 	backpack_contents = list(
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
