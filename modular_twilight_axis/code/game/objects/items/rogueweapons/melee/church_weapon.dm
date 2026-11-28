@@ -22,7 +22,7 @@ GLOBAL_LIST_INIT(church_weapon_list, list(
 										/obj/item/rogueweapon/halberd/bardiche/scythe,
 										/obj/item/rogueweapon/huntingknife/idagger/steel/necra,
 										/obj/item/rogueweapon/halberd/bardiche/twilight_necrascythe/preblessed,
-										/obj/item/rogueweapon/flail/sflail/necraflail,
+										/obj/item/rogueweapon/flail/silver/necra,
 										/obj/item/rogueweapon/huntingknife/idagger/steel/malum,
 										/obj/item/rogueweapon/greatsword/grenz/flamberge/malum,
 										/obj/item/rogueweapon/mace/maul/grand/malum,

@@ -1,0 +1,6 @@
+author: "Saukykouko"
+delete-after: True
+changes:
+  - balance: "Vicious entanglement теперь работает через броню."
+  - balance: "Убран дебафф при удачном касте blood call"
+  - balance: "Blood Stomp больше не уходит в КД при неудачном касте"

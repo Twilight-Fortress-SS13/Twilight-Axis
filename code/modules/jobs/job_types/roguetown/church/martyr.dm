@@ -573,7 +573,7 @@
 	beltr = /obj/item/storage/keyring/church
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/rich
 	backr = /obj/item/storage/backpack/rogue/satchel
-	backl = /obj/item/rogueweapon/shield/tower/holysee
+	backl = /obj/item/rogueweapon/shield/kite/holysee
 	gloves = /obj/item/clothing/gloves/roguetown/plate/holysee
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
 	neck = /obj/item/clothing/neck/roguetown/gorget/steel
@@ -854,7 +854,7 @@
 	force_wielded = 30
 	wdefense = 6
 	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/mace/bash/ranged) // TA EDIT
-	gripped_intents = list(/datum/intent/mace/strike/grand, /datum/intent/mace/smash/grand, /datum/intent/mace/rangedthrust/short, /datum/intent/effect/daze, /datum/intent/effect/hobble) // TA EDIT
+	gripped_intents = list(/datum/intent/mace/strike/grand, /datum/intent/mace/smash/grand, /datum/intent/mace/thrust, /datum/intent/effect/daze, /datum/intent/effect/hobble) // TA EDIT
 	icon_state = "martyrmace"
 	icon = 'icons/roguetown/weapons/blunt64.dmi'
 	item_state = "martyrmace"
@@ -897,7 +897,7 @@
 	item_d_type = "fire"
 	blade_class = BCLASS_SMASH // TA EDIT END
 
-/datum/intent/mace/rangedthrust/short/martyr // TA EDIT START
+/datum/intent/mace/thrust/martyr // TA EDIT START
 	item_d_type = "fire"
 	blade_class = BCLASS_STAB // TA EDIT END
 
@@ -919,7 +919,7 @@
 		SSroguemachine.martyrweapon = src
 	if(!gc_destroyed)
 		var/list/active_intents = list(/datum/intent/mace/strike/martyr, /datum/intent/mace/bash/ranged/martyr) // TA EDIT
-		var/list/active_intents_wielded = list(/datum/intent/mace/strike/grand/martyr, /datum/intent/mace/smash/grand/martyr, /datum/intent/mace/rangedthrust/short/martyr, /datum/intent/effect/daze/martyr, /datum/intent/effect/hobble/martyr) // TA EDIT
+		var/list/active_intents_wielded = list(/datum/intent/mace/strike/grand/martyr, /datum/intent/mace/smash/grand/martyr, /datum/intent/mace/thrust/martyr, /datum/intent/effect/daze/martyr, /datum/intent/effect/hobble/martyr) // TA EDIT
 		var/safe_damage = 20
 		var/safe_damage_wielded = 30
 		AddComponent(/datum/component/martyrweapon, active_intents, active_intents_wielded, safe_damage, safe_damage_wielded)
@@ -1346,7 +1346,7 @@
 	boobed = TRUE
 	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
 	flags_inv = HIDECROTCH|HIDEBOOB
-	storage = TRUE
+	storage = null
 	sellprice = 300
 
 // Helpers

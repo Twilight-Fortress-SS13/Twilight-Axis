@@ -437,7 +437,7 @@
 		switch(second_weapon_choice)
 			if("Kite Shield & elvish dagger")
 				beltr = /obj/item/rogueweapon/huntingknife/idagger/silver/elvish
-				l_hand = /obj/item/rogueweapon/shield/tower/metal
+				l_hand = /obj/item/rogueweapon/shield/kite
 				H.adjust_skillrank(/datum/skill/combat/shields, SKILL_LEVEL_MASTER, TRUE)
 			if("Crossbow & bolts")
 				l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow

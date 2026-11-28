@@ -98,3 +98,27 @@
 	name = "Necra Fog"
 	weather_duration_upper = 5 HOURS
 	weather_visual_color = "#bed7d8"
+
+/datum/particle_weather/fog/zizo
+	name = "Omen of Zizo Defilment Fog"
+	weather_visual_color = "#7ead93" // TA EDIT
+	probability = 0 // TA EDIT
+	weather_duration_upper = 15 MINUTES //long as Zizo's defilement lasts
+
+/datum/particle_weather/fog/zizo/weather_act(mob/living/L)
+	if(HAS_TRAIT(L, TRAIT_WEATHER_PROTECTED))
+		return
+	if(HAS_TRAIT(L, TRAIT_CABAL)) //zizites see this as slightly good omen
+		L.add_stress(/datum/stressevent/zizo_fog)
+
+/datum/particle_weather/fog/zizo_short
+	name = "Omen of Zizo Fog"
+	weather_visual_color = "#7ead93" // TA EDIT
+	probability = 0 // TA EDIT
+	//shorter duration, used for pet cemetary
+
+/datum/particle_weather/fog/zizo_short/weather_act(mob/living/L)
+	if(HAS_TRAIT(L, TRAIT_WEATHER_PROTECTED))
+		return
+	if(HAS_TRAIT(L, TRAIT_CABAL)) //zizites see this as slightly good omen
+		L.add_stress(/datum/stressevent/zizo_fog)

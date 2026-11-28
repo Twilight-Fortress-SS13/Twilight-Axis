@@ -54,7 +54,6 @@
 	block_hard = FALSE
 	block_soft = FALSE
 	allow_dreamwalker = TRUE
-	midround_renegades = RENEGADE_MIDROUND_COUNT
 	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
 	wretch_slot_cap = 7 // TA EDIT
 	// TA EDIT START
@@ -98,9 +97,7 @@
 	allow_dreamwalker = TRUE // TA EDIT START
 	lite_antags = list(
 		/datum/round_event_control/antagonist/solo/masqueradelite = 6,
-		/datum/round_event_control/antagonist/solo/renegade/lite = 1,
 	)
-	midround_renegades = 1
 	preferred_gnoll_mode = GNOLL_SCALING_DYNAMIC	// max 3
 	wretch_slot_cap = 12
 	roundstart_prob = 50
@@ -113,7 +110,6 @@
 	vote_hidden = TRUE // TA EDIT
 	allow_dreamwalker = FALSE
 	lite_antags = null
-	midround_renegades = 0
 	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
 	wretch_slot_cap = 6
 // ----------------------------------------------------------------------------------------------------------
@@ -129,7 +125,6 @@
 	preset_pool = GAMEMODE_POOL_EXTENDED
 	allow_dreamwalker = FALSE
 	lite_antags = null
-	midround_renegades = 0
 	preferred_gnoll_mode = GNOLL_SCALING_NONE
 	wretch_slot_cap = 4
 	// TA EDIT START

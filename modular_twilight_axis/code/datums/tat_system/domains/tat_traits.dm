@@ -847,7 +847,7 @@
 		if(istype(H.patron, /datum/patron/divine))
 			owner_build?.grant_mind_spell_if_missing(H, /datum/action/cooldown/spell/projectile/divine_blast)
 		else if(istype(H.patron, /datum/patron/inhumen))
-			owner_build?.grant_mind_spell_if_missing(H, /datum/action/cooldown/spell/projectile/unholy_blast)
+			owner_build?.grant_mind_spell_if_missing(H, /datum/action/cooldown/spell/projectile/divine_blast/inhumen)
 
 /datum/tat_traits/proc/apply_mage_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_MAGE_INITIATE) || !H.mind)
