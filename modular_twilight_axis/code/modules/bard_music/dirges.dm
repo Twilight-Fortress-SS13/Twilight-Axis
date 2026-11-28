@@ -141,10 +141,10 @@
 	id = "enervating_elegy"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/song/enervating_elegy
 	duration = 15 SECONDS
-	var/drain_amount = 8 // Blue drained per tick (lesser bard, 66%)
+	var/drain_amount = 7 // Blue drained per tick (lesser bard, 66%)
 
 /datum/status_effect/debuff/song/enervating_elegy/full
-	drain_amount = 12 // Blue drained per tick (full bard, 100%)
+	drain_amount = 9 // Blue drained per tick (full bard, 100%)
 
 /datum/status_effect/debuff/song/enervating_elegy/tick()
 	owner.energy_add(-drain_amount)
