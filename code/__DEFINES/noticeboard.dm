@@ -27,6 +27,7 @@
 	"Sergeant", \
 	"Orthodoxist", \
 	"Absolver", \
+	"Ordinator", /* TA EDIT */ \
 	"Marshal", \
 	"Hand", \
 	"Grand Duke", \

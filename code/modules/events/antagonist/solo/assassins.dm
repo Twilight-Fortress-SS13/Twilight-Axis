@@ -41,6 +41,7 @@
 		"Inquisitor",
 		"Orthodoxist",
 		"Absolver",
+		"Ordinator", // TA EDIT
 		"Warden",
 		"Squire",
 		"Veteran",

@@ -24,6 +24,7 @@
 	var/list/valid_roles = list(
 		"Orthodoxist",
 		"Absolver",
+		"Ordinator", // TA EDIT
 		"Templar",
 		"Sergeant",
 		"Man at Arms",

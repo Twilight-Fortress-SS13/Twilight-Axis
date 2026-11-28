@@ -1204,6 +1204,11 @@
 /obj/structure/roguemachine/mail/proc/inqlock()
 	inqonly = !inqonly
 
+/obj/structure/roguemachine/mail/proc/marquette_price(datum/inqports/PA, mob/user) // TA EDIT START
+	if(!istype(PA, /datum/inqports/supplies/litany) && SSmapping.map_adjustment?.map_file_name == "rockhill.dmm" && (user?.mind?.assigned_role in GLOB.inquisition_positions))
+		return max(1, round(PA.marquescost * 0.75))
+	return PA.marquescost // TA EDIT END
+
 /obj/structure/roguemachine/mail/proc/display_marquette(mob/user)
 	if(!inqcoins)
 		return
@@ -1277,7 +1282,7 @@
 			"ref" = "[PA.type]",
 			"name" = PA.name,
 			"category" = PA.category,
-			"cost" = PA.marquescost,
+			"cost" = host.marquette_price(PA, user), // TA EDIT
 			"remaining" = PA.remaining,
 			"maximum" = PA.maximum,
 		))
@@ -1313,8 +1318,11 @@
 			return TRUE
 		if("buy")
 			var/datum/inqports/PA = GLOB.inqsupplies[text2path(params["ref"])]
-			if(!PA?.name || host.inqcoins < PA.marquescost || (PA.maximum && PA.remaining <= 0)) // TA EDIT
+			if(!PA?.name) // TA EDIT START
 				return TRUE
+			var/price = host.marquette_price(PA, user)
+			if(host.inqcoins < price || (PA.maximum && PA.remaining <= 0))
+				return TRUE // TA EDIT END
 			if(host.inqonly && !HAS_TRAIT(user, TRAIT_PURITAN))
 				return TRUE
 			if(istype(PA, /datum/inqports/equipment/garrote) && !HAS_TRAIT(user, TRAIT_BLACKBAGGER)) // TA EDIT
@@ -1327,7 +1335,7 @@
 				turfs += T
 			if(!length(turfs) || !PA.can_purchase(user)) // TA EDIT
 				return TRUE // TA EDIT
-			host.inqcoins -= PA.marquescost
+			host.inqcoins -= price // TA EDIT
 			if(PA.maximum)
 				PA.remaining--
 			host.visible_message(span_warning("[user] sends something."))

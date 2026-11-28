@@ -86,7 +86,7 @@
 			else if(istype(localarea, /area/rogue/indoors/town/bath))
 				rolestonotify = list("Bathmaster", "Bathhouse Attendant")
 			else if(istype(localarea, /area/rogue/indoors/inq))
-				rolestonotify = list("Inquisitor", "Orthodoxist", "Absolver")
+				rolestonotify = list("Inquisitor", "Orthodoxist", "Absolver", "Ordinator") // TA EDIT
 			else if(istype(localarea, /area/rogue/indoors/town/garrison))
 				rolestonotify = list("Man at Arms", "Sergeant", "Royal Guard Sergeant", "Watchman")
 			else if(localarea?.name == "City Watch") // TA EDIT - preserve Twilight Axis city-watch bell recipients

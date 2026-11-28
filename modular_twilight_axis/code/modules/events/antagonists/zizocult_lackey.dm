@@ -12,6 +12,7 @@
 		"Sergeant",\
 		"Inquisitor",\
 		"Absolver",\
+		"Ordinator",\
 		"Veteran",\
 		"Bathmaster",\
 		"Bandit",\

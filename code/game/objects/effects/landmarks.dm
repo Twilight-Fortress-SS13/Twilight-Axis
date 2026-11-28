@@ -208,6 +208,10 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 	name = "Absolver"
 	icon_state = "arrow"
 
+/obj/effect/landmark/start/ordinator // TA EDIT START
+	name = "Ordinator"
+	icon_state = "arrow" // TA EDIT END
+
 /obj/effect/landmark/start/sergeant
 	name = "Sergeant"
 	icon_state = "arrow"

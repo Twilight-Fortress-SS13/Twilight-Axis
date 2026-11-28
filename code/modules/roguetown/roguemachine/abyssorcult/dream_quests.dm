@@ -57,7 +57,7 @@
 		"The seas sing a somber dirge for him",
 		"Psydon is dead, I saw it in a dream"
 	)
-	valid_roles = list("Orthodoxist","Inquisitor","Absolver")
+	valid_roles = list("Orthodoxist","Inquisitor","Absolver","Ordinator") // TA EDIT
 
 /datum/vision_quest/tier_1/wounded_tennite
 	name = "Wounded Pilgrim"
@@ -325,7 +325,7 @@
 		"Psydon's song endures",
 		"Listen to the shell, Psydon calls"
 	)
-	valid_roles = list("Orthodoxist","Inquisitor","Absolver")
+	valid_roles = list("Orthodoxist","Inquisitor","Absolver","Ordinator") // TA EDIT
 
 /datum/vision_quest/tier_1/royal_stag
 	name = "A Terrible Omen"

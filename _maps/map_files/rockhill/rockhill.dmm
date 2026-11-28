@@ -9789,6 +9789,8 @@
 	opacity = 0;
 	density = 0
 	},
+/obj/item/reagent_containers/glass/bottle/rogue/healthpotnew,
+/obj/item/flashlight/flare/torch/lantern/psycenser,
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/inq/shipwardroom)
 "btf" = (
@@ -60059,7 +60061,7 @@
 /obj/structure/mineral_door/wood/red{
 	locked = 1;
 	lockid = "inquisition";
-	name = "Absolver's Chambers"
+	name = "Ordinator's Chambers"
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/inq/shipwardroom)
@@ -69785,6 +69787,7 @@
 	opacity = 0;
 	density = 0
 	},
+/obj/item/reagent_containers/glass/bottle/rogue/healthpotnew,
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/inq/shipwardroom)
 "kkC" = (
@@ -82731,6 +82734,7 @@
 /obj/structure/table/wood,
 /obj/item/reagent_containers/glass/bottle/rogue/manapot,
 /obj/item/book/rogue/bibble/psy,
+/obj/item/reagent_containers/glass/bottle/rogue/healthpotnew,
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/inq/office/shipoffice)
 "mjz" = (
@@ -109552,6 +109556,7 @@
 /obj/machinery/light/rogue/candle,
 /obj/item/paper,
 /obj/item/natural/feather,
+/obj/item/reagent_containers/glass/bottle/rogue/healthpotnew,
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/inq/shipwardroom)
 "qgk" = (
@@ -132643,6 +132648,7 @@
 /obj/machinery/light/rogue/candle/r,
 /obj/item/paper,
 /obj/item/natural/feather,
+/obj/item/reagent_containers/glass/bottle/rogue/healthpotnew,
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/inq/shipwardroom)
 "tHf" = (
@@ -139515,7 +139521,7 @@
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/town/rockhill)
 "uIW" = (
-/obj/effect/landmark/start/absolver,
+/obj/effect/landmark/start/ordinator,
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/inq/shipwardroom)
 "uIX" = (
@@ -151590,7 +151596,6 @@
 "wwk" = (
 /obj/structure/table/wood/poor/alt,
 /obj/item/clothing/neck/roguetown/psicross/g,
-/obj/item/clothing/cloak/cape/inquisitorgold,
 /obj/item/rogueweapon/huntingknife/idagger/silver,
 /obj/effect/spawner/lootdrop/roguetown/dungeon/money,
 /turf/open/floor/rogue/blocks,

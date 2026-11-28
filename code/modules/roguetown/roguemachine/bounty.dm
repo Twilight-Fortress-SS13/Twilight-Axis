@@ -138,7 +138,7 @@
 				return "church"
 		if("Inquisitor", "Absolver")
 			return "inquisition"
-		if("Orthodoxist")
+		if("Orthodoxist", "Ordinator") // TA EDIT
 			if(!bounty_faction_has_primary_leader(list("Inquisitor", "Absolver")))
 				return "inquisition"
 
