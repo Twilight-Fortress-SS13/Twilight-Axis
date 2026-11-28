@@ -4120,6 +4120,7 @@
 #include "modular_twilight_axis\code\modules\mob\living\simple_animal\rogue\dungeon\dungeondrow.dm"
 #include "modular_twilight_axis\code\modules\buildmode\buildmode.dm"
 #include "modular_twilight_axis\code\modules\bard_music\bard_music.dm"
+#include "modular_twilight_axis\code\modules\bard_music\dirges.dm"
 #include "modular_twilight_axis\code\modules\reagents\сhemistry\reagents\drink_reagents.dm"
 #include "modular_twilight_axis\code\modules\cargo\packsrogue\Brigand.dm"
 #include "modular_twilight_axis\code\modules\cargo\packsrogue\Knave.dm"
