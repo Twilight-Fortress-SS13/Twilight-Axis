@@ -1,3 +1,6 @@
+GLOBAL_LIST_EMPTY(boon_registry) // TA ADDITION
+GLOBAL_LIST_EMPTY(prepared_boons) // TA ADDITION
+
 /datum/component/hag_curio_tracker
 	/// The world.time when the Hag was last resurrected by a heart.
 	var/last_revive_time = -5 MINUTES
@@ -41,6 +44,14 @@
 	var/list/datum/hag_identity/stored_names = list()
 
 	var/heavy_curse = TRUE // TA ADDITION - If toggled, our curse will remove all boons.
+
+// TA ADDITION START
+/datum/component/hag_curio_tracker/New(list/raw_args)
+	. = ..()
+	boon_registry = GLOB.boon_registry
+	prepared_boons = GLOB.prepared_boons
+
+// TA ADDITION END
 
 /datum/component/hag_curio_tracker/Initialize(mapload)
 	if(!isliving(parent))

@@ -3,7 +3,8 @@
 /// antag config directly. A preset's vote pool is set by preset_pool, independent of its type hierarchy.
 
 /datum/storyteller/gamemode
-	hag_slots = 1
+	always_votable = TRUE
+	hag_slots = 2 // TA EDIT - ORIGINAL: 1
 // ----------------------------------------------------------------------------------------------------------
 // Admin sandbox - NOT votable. Admins pick before the 120s mark to disable player vote and
 // insert their own antags in.
