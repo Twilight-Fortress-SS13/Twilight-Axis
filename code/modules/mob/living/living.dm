@@ -209,9 +209,13 @@
 			switch(sprint_distance)
 				// Point blank
 				if(0 to 1)
-					self_points -= 99
-					instafail = TRUE
-					fail_reason = "no headstart"
+					if(HAS_TRAIT(src, TRAIT_BIGGUY))
+						stamina_add(30)
+						self_points -= 4
+					else
+						self_points -= 99
+						instafail = TRUE
+						fail_reason = "no headstart"
 				// One to two tile between the people
 				if(2 to 3)
 					self_points -= 2
@@ -226,12 +230,21 @@
 			var/list/obj/item/user_inhand = get_held_items()
 			var/list/obj/item/target_inhand = L.get_held_items()
 
+			var/user_shield_bonus = FALSE
 			for(var/obj/I in user_inhand)
 				if(istype(I, /obj/item/rogueweapon/shield))
-					self_points += 2
+					user_shield_bonus = TRUE
+					break
+			if(user_shield_bonus || HAS_TRAIT(src, TRAIT_BIGGUY))
+				self_points += 2
+
+			var/target_shield_bonus = FALSE
 			for(var/obj/I in target_inhand)
 				if(istype(I, /obj/item/rogueweapon/shield))
-					target_points += 2
+					target_shield_bonus = TRUE
+					break
+			if(target_shield_bonus || HAS_TRAIT(L, TRAIT_BIGGUY))
+				target_points += 2
 
 			// Randomize con roll from -1 to +1 to make it less consistent
 			self_points += rand(-1, 1)
