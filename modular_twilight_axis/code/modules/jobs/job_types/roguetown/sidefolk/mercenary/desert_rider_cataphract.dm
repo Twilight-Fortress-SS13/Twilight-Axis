@@ -61,7 +61,7 @@
 				beltl = /obj/item/rogueweapon/mace/steel
 			if("Flail")
 				H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, 4, TRUE)
-				beltl = /obj/item/rogueweapon/flail/sflail
+				beltl = /obj/item/rogueweapon/flail/steel
 			if("Bardiche")
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, 3, TRUE)
@@ -78,7 +78,7 @@
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
 	gloves = /obj/item/clothing/gloves/roguetown/chain/iron
 	backr = /obj/item/storage/backpack/rogue/satchel
-	backl = /obj/item/rogueweapon/shield/tower/metal
+	backl = /obj/item/rogueweapon/shield/kite
 	backpack_contents = list(
 		/obj/item/roguekey/mercenary = 1,
 		/obj/item/flashlight/flare/torch = 1,

@@ -66,10 +66,6 @@
 #define CONTRACT_UPLINK_PAGE_CONTRACTS "CONTRACTS"
 #define CONTRACT_UPLINK_PAGE_HUB "HUB"
 
-/// When the midround Renegade check fires, measured from round setup.
-#define RENEGADE_MIDROUND_DELAY (90 MINUTES)
-/// Most Renegades the midround check hands out.
-#define RENEGADE_MIDROUND_COUNT 2
 /// Psila a Renegade starts the round with.
 #define RENEGADE_STARTING_PSILA 20
 /// Mammon worth of Vheslie goods one psilen buys through the Boon Menu.

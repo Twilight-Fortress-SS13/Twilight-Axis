@@ -37,9 +37,9 @@
 		return FALSE
 	if(user == src)
 		return FALSE
-	if(!(mobility_flags & MOBILITY_MOVE))
+	var/mounted = ismob(buckled) && buckled.buckle_lying <= 0
+	if(mounted ? incapacitated() : !(mobility_flags & MOBILITY_MOVE))
 		return FALSE
-
 
 	if(is_drawing_ranged())
 		return FALSE
@@ -75,7 +75,8 @@
 			if(success)
 				ronin_on_parry_success(src, user)
 		if(INTENT_DODGE)
-			success = attempt_dodge(attack_intent, user)
+			if(!mounted) // TA EDIT
+				success = attempt_dodge(attack_intent, user)
 
 	if(success)
 		soundbreaker_riff_defense_success(src)

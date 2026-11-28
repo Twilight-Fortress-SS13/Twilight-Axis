@@ -621,7 +621,7 @@
 /area/rogue/under/underdark/north)
 "jV" = (
 /obj/machinery/anvil,
-/obj/item/ingot/purifiedaalloy,
+/obj/item/ingot/ancient,
 /obj/item/rogueweapon/tongs/blacksteel,
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/razorsharpkeep)

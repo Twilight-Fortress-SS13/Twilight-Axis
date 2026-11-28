@@ -66,7 +66,7 @@
 				beltr = /obj/item/rogueweapon/scabbard/sword
 			if("Falchion & Kite Shield") //Otavan
 				r_hand = /obj/item/rogueweapon/sword/short/falchion
-				backl= /obj/item/rogueweapon/shield/tower/metal
+				backl= /obj/item/rogueweapon/shield/kite
 				beltr = /obj/item/rogueweapon/scabbard/sword
 			if("Sword & Crossbow") //Etruscan
 				backl= /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow

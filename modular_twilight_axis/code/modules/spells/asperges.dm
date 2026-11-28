@@ -299,8 +299,8 @@
 		if(new_convert.mind.has_spell(/datum/action/cooldown/spell/projectile/divine_blast))
 			new_convert.mind.RemoveSpell(/datum/action/cooldown/spell/projectile/divine_blast)
 
-		if(new_convert.mind.has_spell(/datum/action/cooldown/spell/projectile/unholy_blast))
-			new_convert.mind.RemoveSpell(/datum/action/cooldown/spell/projectile/unholy_blast)
+		if(new_convert.mind.has_spell(/datum/action/cooldown/spell/projectile/divine_blast/inhumen))
+			new_convert.mind.RemoveSpell(/datum/action/cooldown/spell/projectile/divine_blast/inhumen)
 
 		new_convert.devotion.Destroy()
 

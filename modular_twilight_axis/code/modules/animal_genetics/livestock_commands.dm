@@ -474,7 +474,7 @@
 /mob/living/simple_animal/proc/assign_livestock_owner(mob/living/new_owner)
 	if(!new_owner || QDELETED(new_owner))
 		return FALSE
-	owner = new_owner
+	claim(new_owner)
 	if(istype(src, /mob/living/simple_animal/hostile))
 		var/mob/living/simple_animal/hostile/hostile_animal = src
 		hostile_animal.friends |= new_owner

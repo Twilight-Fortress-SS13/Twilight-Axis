@@ -1145,3 +1145,99 @@
   - rscadd: NPC spells and bow draw can no longer be interrupted by hitting them,
       same as a player's
   - rscadd: Refactored and cleaned up succession rituals code
+2026-11-24:
+  567Turtle:
+  - bugfix: tiger stripes are now drawn correctly
+  KatTheFox:
+  - refactor: Spell alt modes are now handled through a unified set of vars and procs,
+      instead of being manually reinvented in each of 15 different spell files. Spells
+      should behave identically, except for unholy blast, which will now dust instead
+      of gib because I cba to port that to the new, parented-to-divine-blast version.
+  - bugfix: Adjudicators who pick the Psydonic War Axe now actually get their war
+      axe and shield instead of nothing.
+  OrbisAnima:
+  - balance: Makes alchemical arrows have antibeast base (150%).
+  - qol: Removes fail chance on grindwheel plank creation.
+  Quinalion:
+  - qol: You can now climb onto nearby tree branches by left-clicking them with an
+      empty hand.
+  - qol: Branch climbing respects Climbing skill, Speed, furniture bonuses, Woodwalker,
+      and sneak mode.
+  - bugfix: Leaves over open space no longer swallow interactions intended for the
+      tile beneath them.
+  - bugfix: Carried or grabbed characters now remain attached to their carrier when
+      using stairs.
+  - bugfix: Passengers attached to a dragged mob now travel between floors with it.
+  Ryumi:
+  - rscadd: Static threat spawners now have a chance to extinguish all lights around
+      them when nobody is looking, to keep the roads feeling at least a little dangerous,
+      even when the lights are on.
+  - rscadd: Static threat spawners now ignore the light fixtures seen in the Underdark
+      and Mount Decapitation; meaning they will will spawn threats even when they
+      are in their "area of effect." You'll need to build lights in such areas if
+      you're seeing threats appearing there!
+  awwlie:
+  - bugfix: fixed shift + key, keybinds not taking the key, but the result.
+  radarseas:
+  - rscadd: Added Zizo Fog, its exclusive to Zizo's Pet Cemetary omen and Zizo's defilement.
+      Zizites can prayer during it, Zizites get a minor mood buff.
+  - rscadd: Added omen text to Zizo's defilement.
+  - bugfix: fixed Zizo's pet cemetary being inconsistant and using the wrong way to
+      announce itself, making it almost seem more like an admin event.
+2026-11-25:
+  JustSomeGal:
+  - rscadd: Shophand now has Cicerone
+  Quinalion:
+  - bugfix: Armour, weapons and clothing no longer lose their secondary colours when
+      broken or repaired.
+  Ryan180602:
+  - bugfix: roundstart court agents now get their notes in the hand's sheaf of papers.
+  WeNeedMorePhoron:
+  - rscadd: Shifting clicking a bill of fare let you view its content
+  - rscadd: Poison daggers now applies the envenomed debuff on penetrative wounds
+      when used by someone with the venomcraft trait.
+  - rscdel: Removed the ability to dip certain poison dagger in reagents
+  - rscdel: Remove belted satchel from triumph items
+  - rscadd: Retrieval quests shouldn't care about items you carry on yourself anymore
+  - rscadd: You can no longer invite conjured sumons into fellowship
+  - rscadd: Corrected numerous class texts that would imply that the Azurian Church
+      is under the Holy See of Grenzelhoft (It is politically independent). Changed
+      the Divine Pantheon text to match this to imply Grenzelhoftian Holy See is more
+      of a first amongst equal
+  - rscadd: The litany of the ten that gives them their staff is now spoken in Imperial
+      instead of Grenzelhoftian.
+  - rscdel: Removed the Heritage Vision traits from Black Oak
+  - rscadd: Rewrote Black Oak descriptor and class to move away from the "this is
+      our land" angle to one based on the new Bloak lore. Also updated the related
+      grovewalker description.
+  - rscdel: Dark Elf are no longer allowed to be bloak (I am not sure why they were
+      even allowed in the first place)
+  - rscdel: Removed the Chieftain class from the Heartfelt Migration Wave
+  - rscadd: Rewrote the lore of the heartfelt classes and ported some Azurian classes
+      description. The Magi has a mention that their election as the Count of Heartfelt
+      is considered an oddity and they must've came after 1492.
+  - rscadd: The Heartfelt Priest is no longer a Bishop equivalence (!?) in traits
+      but more of an acolyte with T4 access
+  - rscadd: Heartfelt is officially racist and will no longer accept goblins, half-orcs
+      or kobolds amongst their rank,
+  - rscadd: Rewrote some description of alcohol to give them a proper origin within
+      Azuria
+  - rscadd: Corrected some lore desc I did not catch that referred to Rockhill as
+      a country, or to the papacies of Grenzelhoft / Etrusca (And instead use the
+      word clergies)
+  - rscadd: Corrected some quest writs to match the above rewrite
+  fffelinid:
+  - bugfix: Fixed a few bugs related to the Amorphous Landing murkling quirk.
+  - balance: Increased player-controlled ooze mobs health a bit.
+  radarseas:
+  - rscadd: Added more deranged knight variants
+  - rscadd: Added basic framework for Zizo miracles in the hands of AI.
+  - balance: Zizite deranged knights can now randomly cast a cantrip chosen out of
+      3 types, with a 6/7 chance,
+  - balance: Luxplate deranged knights can use upto, T2 miracles as long as they have
+      written AI in the code for it.
+  - balance: the Fallen duke boss on pilgrim has been adjusted slightly.
+  - balance: Skeletons no longer all have ugly masks, critical weakness has been adjusted
+      to no longer kill w/ facial disfigurement.
+  - balance: unique weapons + heretic stuff + amulets + mad duke's rapier is no longer
+      scavenged-marked
