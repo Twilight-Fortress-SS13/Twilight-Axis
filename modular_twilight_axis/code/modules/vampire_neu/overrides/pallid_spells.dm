@@ -71,10 +71,14 @@
 		to_chat(user, span_warning("Метка угасла..."))
 		return
 
+	if(QDELETED(user) || !HAS_TRAIT_FROM(victim, TRAIT_PALLID, my_ref))
+		to_chat(user, span_warning("Метка угасла..."))
+		return
+
 	var/turf/user_turf = get_turf(user)
 	var/turf/victim_turf = get_turf(victim)
 
-	if(!are_z_levels_same_map(user_turf.z, victim_turf.z))
+	if(!user_turf || !victim_turf || !are_z_levels_same_map(user_turf.z, victim_turf.z))
 		to_chat(user, span_warning("Цель слишком далеко..."))
 		return
 
@@ -105,21 +109,22 @@
 	invocation_emote_self = span_notice("Я чувствую, как проклятие шевелится внутри меня...")
 	human_req = TRUE
 	clothes_req = FALSE
-	var/mob/living/carbon/human/sire = null
+	var/datum/weakref/sire_ref
 
 /obj/effect/proc_holder/spell/self/pallid_sense/Initialize(mapload, mob/living/carbon/human/linked_sire)
 	. = ..()
-	sire = linked_sire
+	sire_ref = WEAKREF(linked_sire)
 
 /obj/effect/proc_holder/spell/self/pallid_sense/cast(mob/living/carbon/human/user)
-	if(!sire || QDELETED(sire) || sire.stat == DEAD)
+	var/mob/living/carbon/human/sire = sire_ref?.resolve()
+	if(!sire || sire.stat == DEAD)
 		to_chat(user, span_warning("Присутствие, отметившее меня, исчезло из этого мира..."))
 		return
 
 	var/turf/user_turf = get_turf(user)
 	var/turf/sire_turf = get_turf(sire)
 
-	if(!are_z_levels_same_map(user_turf.z, sire_turf.z))
+	if(!user_turf || !sire_turf || !are_z_levels_same_map(user_turf.z, sire_turf.z))
 		to_chat(user, span_warning("Цель слишком далеко..."))
 		return
 

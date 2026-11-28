@@ -115,7 +115,10 @@ SUBSYSTEM_DEF(ta_rockhill_masquerade)
 	if(clan_choice_ticks_left <= 0 && !clan_selected)
 		clan_choice_ticks_left = ROCKHILL_MASQUERADE_CLAN_CHOICE_TICKS
 	update_clan_choice_bar()
-	pause_clan_choice_timeout()
+	if(clan_menu)
+		pause_clan_choice_timeout()
+	else
+		resume_clan_choice_timeout()
 
 /datum/antagonist/vampire/rockhill_masquerader/pause_clan_choice_timeout()
 	if(clan_choice_timer)
@@ -513,7 +516,7 @@ SUBSYSTEM_DEF(ta_rockhill_masquerade)
 	if(!istype(owner_body) || !owner_body.clan)
 		return FALSE
 	var/living_vampires = 0
-	for(var/mob/living/carbon/human/member as anything in owner_body.clan.clan_members)
+	for(var/mob/living/carbon/human/member in owner_body.clan.clan_members)
 		if(considered_alive(member.mind) && member.mind?.has_antag_datum(/datum/antagonist/vampire))
 			living_vampires++
 	return living_vampires >= target_clan_size

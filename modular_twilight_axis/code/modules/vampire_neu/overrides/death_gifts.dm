@@ -1,5 +1,6 @@
 #define TA_DEATH_GIFT_DARKSIGHT_SEE_IN_DARK 15
 #define TA_DEATH_GIFT_DARKSIGHT_LIGHTING_ALPHA LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
+#define TA_DEATH_GIFT_CHOICE_TIME (2 MINUTES)
 #define TA_DEATH_GIFT_BERSERK_DURATION (1 MINUTES)
 #define TA_DEATH_GIFT_TIRED_DURATION (10 MINUTES)
 #define TA_DEATH_GIFT_BERSERK_SLEEP_DURATION (3 MINUTES)
@@ -114,7 +115,8 @@
 		if(original_mind && original_mind.current != src)
 			original_mind.transfer_to(src, TRUE)
 		if(client)
-			client.verbs.Remove(GLOB.ghost_verbs)
+			remove_verb(client, GLOB.ghost_verbs)
+			client.init_verbs()
 		remove_status_effect(/datum/status_effect/debuff/rotted_zombie)
 		mind?.remove_antag_datum(/datum/antagonist/zombie)
 
@@ -143,7 +145,7 @@
 	return TRUE
 
 /mob/living/carbon/human/proc/ta_offer_death_gift(mob/living/carbon/human/sire, datum/antagonist/vampire/VDrinker)
-	if(QDELETED(src) || !mind || !istype(VDrinker) || !VDrinker.ta_can_offer_death_gift())
+	if(QDELETED(src) || !mind || QDELETED(VDrinker) || !VDrinker.ta_can_offer_death_gift())
 		return FALSE
 
 	var/list/available_gifts = list()
@@ -164,22 +166,27 @@
 	)
 
 	var/use_byond_alert = stat != CONSCIOUS || InCritical()
+	var/offer_expires = world.time + TA_DEATH_GIFT_CHOICE_TIME
 	var/list/options = available_gifts.Copy()
 	var/choice = ta_tgui_tooltip_alert(
 		src,
 		"Темное создание иссушило вашу душу и тело, но ваша воля позволила вам преодолеть его проклятье.\n\nВыберите темный дар, который вы похитите.",
 		"ДАР СМЕРТИ",
 		options,
-		2 MINUTES,
+		TA_DEATH_GIFT_CHOICE_TIME,
 		strict_byond = use_byond_alert,
 		ui_state = GLOB.tgui_always_state,
 		button_tooltips = death_gift_descriptions
 	)
 
-	if(QDELETED(src) || !mind || !istype(VDrinker) || !VDrinker.ta_can_offer_death_gift())
+	if(QDELETED(src) || !mind || stat == DEAD || QDELETED(VDrinker) || !VDrinker.ta_can_offer_death_gift())
 		return FALSE
 
 	if(!choice || !(choice in options))
+		return FALSE
+
+	if(world.time > offer_expires || !GetComponent(/datum/component/pallid_addiction))
+		to_chat(src, span_warning("Темный дар уже ускользнул от меня."))
 		return FALSE
 
 	if(!ta_apply_death_gift(choice, sire))
@@ -380,18 +387,18 @@
 	if(!starting && can_start_berserk(owner))
 		start_berserk(owner)
 
-/datum/component/ta_death_gift_berserk/proc/can_start_berserk(mob/living/carbon/human/owner)
+/datum/component/ta_death_gift_berserk/proc/can_start_berserk(mob/living/carbon/human/owner, risen = FALSE)
 	if(!istype(owner) || QDELETED(owner) || owner.stat == DEAD || active)
 		return FALSE
 	if(owner.has_status_effect(/datum/status_effect/debuff/sleepytime) || owner.has_status_effect(/datum/status_effect/debuff/ta_death_gift_tired))
 		return FALSE
 	if(!owner.get_bodypart(BODY_ZONE_HEAD))
 		return FALSE
-	return owner.InCritical() || owner.health <= owner.crit_threshold || ((owner.blood_volume in -INFINITY to BLOOD_VOLUME_SURVIVE) && !HAS_TRAIT(owner, TRAIT_BLOODLOSS_IMMUNE))
+	return risen || owner.InCritical() || owner.health <= owner.crit_threshold || ((owner.blood_volume in -INFINITY to BLOOD_VOLUME_SURVIVE) && !HAS_TRAIT(owner, TRAIT_BLOODLOSS_IMMUNE))
 
-/datum/component/ta_death_gift_berserk/proc/start_berserk(mob/living/carbon/human/owner)
+/datum/component/ta_death_gift_berserk/proc/start_berserk(mob/living/carbon/human/owner, risen = FALSE)
 	starting = FALSE
-	if(!can_start_berserk(owner))
+	if(!can_start_berserk(owner, risen))
 		return
 
 	active = TRUE
@@ -666,12 +673,12 @@
 	if(gibbed)
 		return
 	if(active)
-		INVOKE_ASYNC(src, PROC_REF(ta_bloody_gib), source)
+		addtimer(CALLBACK(src, PROC_REF(ta_bloody_gib), source), 1)
 		return
 	if(!can_rise_from_death(source))
 		return
 	rising = TRUE
-	INVOKE_ASYNC(src, PROC_REF(rise_from_death), source)
+	addtimer(CALLBACK(src, PROC_REF(rise_from_death), source), 1)
 
 /datum/component/ta_death_gift_berserk/proc/can_rise_from_death(mob/living/carbon/human/owner)
 	if(!istype(owner) || QDELETED(owner) || active || starting || rising)
@@ -706,13 +713,14 @@
 
 	owner.visible_message(span_userdanger("Раны [owner] с влажным хрустом стягиваются, и мертвое тело поднимается на ноги!"), span_userdanger("Смерть не удержит мою ярость. ПЛОТЬ СРАСТАЕТСЯ, И Я ВСТАЮ."))
 	if(!active && !starting)
-		start_berserk(owner)
+		start_berserk(owner, TRUE)
 	rising = FALSE
 
 /datum/component/ta_death_gift_berserk/proc/heal_death_wounds(mob/living/carbon/human/owner)
 	for(var/obj/item/bodypart/bodypart as anything in owner.bodyparts)
-		for(var/datum/wound/grievous/killing_wound in bodypart.wounds.Copy())
+		for(var/datum/wound/grievous/killing_wound in bodypart.wounds?.Copy())
 			qdel(killing_wound)
+			bodypart.dismemberable = initial(bodypart.dismemberable)
 
 /datum/component/ta_death_gift_berserk/proc/on_item_attacked_success(mob/living/carbon/human/source, obj/item/weapon, mob/living/attacker)
 	SIGNAL_HANDLER
@@ -829,6 +837,7 @@
 
 #undef TA_DEATH_GIFT_DARKSIGHT_SEE_IN_DARK
 #undef TA_DEATH_GIFT_DARKSIGHT_LIGHTING_ALPHA
+#undef TA_DEATH_GIFT_CHOICE_TIME
 #undef TA_DEATH_GIFT_BERSERK_DURATION
 #undef TA_DEATH_GIFT_TIRED_DURATION
 #undef TA_DEATH_GIFT_BERSERK_SLEEP_DURATION

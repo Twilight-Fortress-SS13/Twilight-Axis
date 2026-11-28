@@ -20,4 +20,7 @@
 
 	GLOB.crimson_crucible_personal_servant_summons[vampire_ref] = TA_CRUCIBLE_ROLE_BLOCKED
 
+/datum/antagonist/vampire/proc/ta_personal_servant_blocked()
+	return GLOB.crimson_crucible_personal_servant_summons[REF(src)] == TA_CRUCIBLE_ROLE_BLOCKED
+
 #undef TA_CRUCIBLE_ROLE_BLOCKED

@@ -1,229 +1,86 @@
-import { useState } from 'react';
-import { useBackend } from 'tgui/backend';
-import { suspendStart } from 'tgui/events/handlers/suspense';
-import { Window } from 'tgui/layouts';
+import type { ReactNode } from 'react';
 import {
   Box,
   Button,
   Divider,
+  Icon,
   ProgressBar,
   Section,
   Stack,
 } from 'tgui-core/components';
+import type { BooleanLike } from 'tgui-core/react';
 
-type Project = {
-  ref: string;
+import { useBackend } from '../backend';
+import { suspendStart } from '../events/handlers/suspense';
+import { Window } from '../layouts';
+import { useWindowExpand } from './common/useWindowExpand';
+
+type Contributor = {
+  name: string;
+  amount: number;
+};
+
+type ProjectInfo = {
+  type: string;
+  name: string;
+  description: string;
+  mechanics: string;
+  category: string;
+  cost: number;
+};
+
+type PersonalServant = {
   name: string;
   description: string;
   mechanics: string;
   cost: number;
+};
+
+type ActiveProject = {
+  type: string;
   paid: number;
-  remaining: number;
-  progress: number;
-  isLordOnly: boolean;
-  accessText: string;
-  canContribute: boolean;
+  fromCup: number;
   maxContribution: number;
-  maxBloodCost: number;
-  contributorsText: string;
-  contributionText: string;
+  lockedReason: string | null;
+  contributors: Contributor[];
 };
 
 type AvailableProject = {
-  type_path: string;
-  name: string;
-  description: string;
-  mechanics: string;
-  cost: number;
-  isLordOnly: boolean;
-  accessText: string;
-  accessSeal: string;
-  canStart: boolean;
-  lockedReason: string;
+  type: string;
+  lockedReason: string | null;
 };
 
-type CrucibleData = {
-  bloodLevel: number;
-  maxBlood: number;
-  committedVitae: number;
-  isLord: boolean;
-  isVampire: boolean;
-  canDepositBlood: boolean;
-  maxCupDeposit: number;
-  activeProjects: Project[];
+type Data = {
+  projects: ProjectInfo[];
+  personalServant: PersonalServant;
+  ascensionTotal: number;
+  capacityPerAscension: number;
+  vitaeReserve: number;
+  minDonation: number;
+  donationVitae: number;
+  donationBlood: number;
+  bloodNormal: number;
+  cup: number;
+  cupCapacity: number;
+  isVampire: BooleanLike;
+  vitae: number;
+  maxVitae: number;
+  blood: number;
+  maxGive: number;
+  isLord: BooleanLike;
+  maxPour: number;
+  summoning: string | null;
+  ascensions: number;
+  sunStolen: BooleanLike;
+  sunRiteDone: BooleanLike;
+  activeProjects: ActiveProject[];
   availableProjects: AvailableProject[];
-  personalServantProject?: AvailableProject | null;
-  language?: string;
-  i18nOverrides?: Record<string, string> | null;
+  hasPersonalCall: BooleanLike;
+  personalCallLock: string | null;
 };
 
-type Translator = (
-  key: string,
-  vars?: Record<string, string | number>,
-) => string;
-
-const FALLBACK_LANG = 'en';
-
-const TRANSLATIONS: Record<string, Record<string, string>> = {
-  en: {
-    windowTitle: 'Crimson Crucible',
-    headerTitle: 'CRIMSON CRUCIBLE',
-    roleLord: 'Right of Dominion',
-    roleVampire: 'Right of Sacrifice',
-    roleMortal: 'Living sacrifice',
-    expand: 'Expand',
-    restore: 'Restore',
-    expandTip: 'Expand window to screen',
-    restoreTip: 'Restore default window size',
-    close: 'Close',
-    closeTip: 'Close window',
-    bloodInCup: 'Blood in cup: {current} / {max}',
-    committed: 'Committed: {n} vitae',
-    pourBlood: 'Pour blood',
-    giveBlood: 'Give blood',
-    availableToPour: 'Available to pour: {n} vitae',
-    activeRituals: 'Active Rituals',
-    newRituals: 'New Rituals',
-    emptyActive: 'The crucible is silent. No ritual has begun.',
-    mortalNote:
-      'The crucible accepts blood into the cup. Only the Methuselah can direct it into rituals.',
-    nonLordNote:
-      'Only the Methuselah can begin or direct rituals. Other vampires may fill the cup and answer one weak servant call.',
-    noRituals: 'No rituals are available.',
-    direct: 'Direct',
-    contribute: 'Contribute',
-    cancel: 'Cancel',
-    required: 'Required: {n} vitae',
-    collected: 'Collected: {n} vitae',
-    remaining: 'Remaining: {n} vitae',
-    contributors: 'Contributors:',
-    description: 'Description',
-    mechanics: 'Mechanics',
-    cost: 'Cost: {n} vitae',
-    start: 'Start',
-    noContributors: 'No one yet',
-    contributionDirect: 'Can direct up to {n} vitae; the cup is spent first',
-    contributionVitae: 'Can contribute up to {n} vitae',
-    contributionBlood: 'Will sacrifice {vitae} vitae and {blood} blood',
-  },
-};
-
-const localizeText = (text: string, t: Translator): string => {
-  if (!text) return text;
-  return t(text);
-};
-
-const localizeContributors = (text: string, t: Translator): string => {
-  if (!text) return text;
-  if (text === 'No one yet') return t('noContributors');
-  return text;
-};
-
-const localizeContribution = (text: string, t: Translator): string => {
-  if (!text) return text;
-  let m: RegExpMatchArray | null;
-  if (
-    // biome-ignore lint/suspicious/noAssignInExpressions: Easiest way to do this
-    (m = text.match(/^Can direct up to (\d+) vitae; the cup is spent first$/))
-  ) {
-    return t('contributionDirect', { n: m[1] });
-  }
-  // biome-ignore lint/suspicious/noAssignInExpressions: Easiest way to do this
-  if ((m = text.match(/^Can contribute up to (\d+) vitae$/))) {
-    return t('contributionVitae', { n: m[1] });
-  }
-  // biome-ignore lint/suspicious/noAssignInExpressions: Easiest way to do this
-  if ((m = text.match(/^Will sacrifice (\d+) vitae and (\d+) blood$/))) {
-    return t('contributionBlood', { vitae: m[1], blood: m[2] });
-  }
-  return localizeText(text, t);
-};
-
-const localizeActiveProject = (p: Project, t: Translator): Project => {
-  const next: Project = { ...p };
-  next.name = localizeText(p.name, t);
-  next.description = localizeText(p.description, t);
-  next.mechanics = localizeText(p.mechanics, t);
-  next.accessText = localizeText(p.accessText, t);
-  next.contributorsText = localizeContributors(p.contributorsText, t);
-  next.contributionText = localizeContribution(p.contributionText, t);
-  return next;
-};
-
-const localizeAvailableProject = (
-  p: AvailableProject,
-  t: Translator,
-): AvailableProject => {
-  const next: AvailableProject = { ...p };
-  next.name = localizeText(p.name, t);
-  next.description = localizeText(p.description, t);
-  next.mechanics = localizeText(p.mechanics, t);
-  next.accessText = localizeText(p.accessText, t);
-  next.lockedReason = localizeText(p.lockedReason, t);
-  return next;
-};
-
-const resolveLang = (raw: string | undefined): string => {
-  return raw || FALLBACK_LANG;
-};
-
-const makeT =
-  (lang: string, overrides?: Record<string, string> | null) =>
-  (key: string, vars?: Record<string, string | number>): string => {
-    let value: string | undefined = overrides ? overrides[key] : undefined;
-    if (value === undefined) {
-      const dict = TRANSLATIONS[lang] || TRANSLATIONS[FALLBACK_LANG];
-      value = dict[key];
-    }
-    if (value === undefined) {
-      value = TRANSLATIONS[FALLBACK_LANG][key];
-    }
-    if (value === undefined) {
-      return key;
-    }
-    if (vars) {
-      for (const name of Object.keys(vars)) {
-        value = value.replace(`{${name}}`, String(vars[name]));
-      }
-    }
-    return value;
-  };
-
-const formatVitae = (value: number) =>
-  Math.round(value || 0).toLocaleString('en-US');
-
-const formatPercent = (value: number) =>
-  `${Number(value || 0).toLocaleString('en-US', {
-    maximumFractionDigits: 1,
-  })}%`;
-
-const clampRatio = (value: number) => Math.max(0, Math.min(1, value || 0));
-
-const defaultWindowWidth = 1680;
-const defaultWindowHeight = 920;
-
-const setCrucibleWindowSize = (expanded: boolean) => {
-  const scale = window.devicePixelRatio || 1;
-  const screenWidth = Math.floor(window.screen.availWidth * scale);
-  const screenHeight = Math.floor(window.screen.availHeight * scale);
-  const width = expanded
-    ? screenWidth
-    : Math.min(defaultWindowWidth, screenWidth);
-  const height = expanded
-    ? screenHeight
-    : Math.min(defaultWindowHeight, screenHeight);
-  const x = expanded ? 0 : Math.max(Math.floor((screenWidth - width) / 2), 0);
-  const y = expanded ? 0 : Math.max(Math.floor((screenHeight - height) / 2), 0);
-
-  Byond.winset(Byond.windowId, {
-    pos: `${x},${y}`,
-    size: `${width}x${height}`,
-  });
-};
-
-const closeCrucibleWindow = () => {
-  suspendStart();
-};
+const WINDOW_WIDTH = 1680;
+const WINDOW_HEIGHT = 920;
 
 const shellStyle = {
   background:
@@ -248,7 +105,7 @@ const headerGridStyle = {
   alignItems: 'center',
   display: 'grid',
   gap: '16px',
-  gridTemplateColumns: '210px minmax(320px, 1fr) minmax(280px, 340px)',
+  gridTemplateColumns: '210px minmax(320px, 1fr) minmax(280px, 420px)',
   padding: '14px',
 };
 
@@ -273,7 +130,7 @@ const windowControlButtonStyle = {
 const contentGridStyle = {
   display: 'grid',
   gap: '8px',
-  gridTemplateColumns: 'minmax(660px, 2.25fr) minmax(460px, 1fr)',
+  gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
   height: '100%',
   minHeight: 0,
 };
@@ -284,20 +141,13 @@ const parchmentStyle = {
   borderRadius: '6px',
   color: '#17110f',
   boxShadow: 'inset 0 0 12px rgba(255, 246, 190, 0.22)',
-};
-
-const activeCardStyle = {
-  ...parchmentStyle,
   minWidth: 0,
   padding: '10px',
 };
 
-const availableCardStyle = {
+const lockedParchmentStyle = {
   ...parchmentStyle,
-  display: 'grid',
-  gap: '8px',
-  minWidth: 0,
-  padding: '10px',
+  opacity: 0.6,
 };
 
 const sealStyle = {
@@ -354,215 +204,101 @@ const mechanicsStyle = {
   whiteSpace: 'pre-line' as const,
 };
 
-export const CrimsonCrucible = () => {
-  const { act, data } = useBackend<CrucibleData>();
-  const [windowExpanded, setWindowExpanded] = useState(false);
+const emptyStateStyle = {
+  border: '1px dashed #5b1b1f',
+  borderRadius: '6px',
+  background: 'rgba(24, 6, 7, 0.45)',
+};
+
+const CATEGORY_ICONS: Record<string, string> = {
+  summoning: 'hand-sparkles',
+  ascension: 'crown',
+  sun: 'sun',
+};
+
+const formatVitae = (value: number) =>
+  Math.round(value || 0).toLocaleString('ru-RU');
+
+const getPourTooltip = (data: Data) => {
+  const { maxPour = 0, cup = 0, cupCapacity = 0, vitaeReserve = 0 } = data;
+  if (maxPour >= 1) {
+    return `Могу влить до ${formatVitae(maxPour)} витэ`;
+  }
+  if (cup >= cupCapacity) {
+    return 'Чаша полна';
+  }
+  return `Последние ${formatVitae(vitaeReserve)} витэ останутся со мной`;
+};
+
+const getGiveTooltip = (data: Data) => {
   const {
-    bloodLevel = 0,
-    maxBlood = 20000,
-    committedVitae = 0,
-    isLord = false,
-    isVampire = false,
-    canDepositBlood = false,
-    maxCupDeposit = 0,
-    activeProjects = [],
-    availableProjects = [],
-    personalServantProject = null,
+    maxGive = 0,
+    cup = 0,
+    cupCapacity = 0,
+    minDonation = 0,
+    donationVitae = 0,
+    donationBlood = 0,
   } = data;
-  const isLordUser = !!isLord;
-  const isVampireUser = !!isVampire;
-  const canDeposit = !!canDepositBlood;
-  const lang = resolveLang(data.language);
-  const t = makeT(lang, data.i18nOverrides);
-  const localizedActiveProjects = activeProjects.map((p) =>
-    localizeActiveProject(p, t),
-  );
-  const localizedAvailableProjects = availableProjects.map((p) =>
-    localizeAvailableProject(p, t),
-  );
-  const localizedPersonalServantProject = personalServantProject
-    ? localizeAvailableProject(personalServantProject, t)
-    : null;
-  const hasLordProjects =
-    isVampireUser && isLordUser && localizedAvailableProjects.length > 0;
-  const hasPersonalServantProject =
-    isVampireUser && !!localizedPersonalServantProject;
-  const showLordEmptyState =
-    isVampireUser &&
-    isLordUser &&
-    !hasLordProjects &&
-    !hasPersonalServantProject;
-  const bloodRatio = clampRatio(bloodLevel / Math.max(maxBlood, 1));
-  const roleText = isVampireUser
-    ? isLordUser
-      ? t('roleLord')
-      : t('roleVampire')
-    : t('roleMortal');
-  const toggleWindowSize = () => {
-    const nextExpanded = !windowExpanded;
-    setCrucibleWindowSize(nextExpanded);
-    setWindowExpanded(nextExpanded);
-  };
+  if (maxGive > 0) {
+    const bloodCost = donationVitae
+      ? Math.ceil((maxGive * donationBlood) / donationVitae)
+      : 0;
+    return `Могу отдать до ${formatVitae(maxGive)} витэ ценой ${formatVitae(bloodCost)} крови`;
+  }
+  if (cupCapacity - cup < minDonation) {
+    return 'Чаша полна';
+  }
+  return `Тигель берёт не меньше ${formatVitae(minDonation)} витэ`;
+};
+
+const getContributeTooltip = (project: ActiveProject) => {
+  if (project.lockedReason) {
+    return project.lockedReason;
+  }
+  if (project.maxContribution < 1) {
+    return 'Мне нечего отдать этому ритуалу';
+  }
+  return `Могу направить до ${formatVitae(project.maxContribution)} витэ, сперва из чаши`;
+};
+
+const Seal = (props: { icon: string }) => (
+  <Box style={sealStyle}>
+    <Icon name={props.icon} />
+  </Box>
+);
+
+const EmptyState = (props: { text: string }) => (
+  <Box italic textAlign="center" color="#b99b7c" p={2} style={emptyStateStyle}>
+    {props.text}
+  </Box>
+);
+
+const Meter = (props: { label: string; value: number; max: number }) => {
+  const { label, value, max } = props;
 
   return (
-    <Window
-      title={t('windowTitle')}
-      width={defaultWindowWidth}
-      height={defaultWindowHeight}
-      theme="dark"
-    >
-      <Window.Content fitted>
-        <Box p={1} style={shellStyle}>
-          <Box style={headerGridStyle}>
-            <Box style={sealControlStyle}>
-              <Box style={sealStyle}>V</Box>
-              <Box style={windowControlStackStyle}>
-                <Button
-                  fluid
-                  color="gold"
-                  icon={windowExpanded ? 'compress' : 'expand'}
-                  tooltip={windowExpanded ? t('restoreTip') : t('expandTip')}
-                  tooltipPosition="right"
-                  onClick={toggleWindowSize}
-                  style={windowControlButtonStyle}
-                >
-                  {windowExpanded ? t('restore') : t('expand')}
-                </Button>
-                <Button
-                  fluid
-                  color="red"
-                  icon="times"
-                  tooltip={t('closeTip')}
-                  tooltipPosition="right"
-                  onClick={closeCrucibleWindow}
-                  style={windowControlButtonStyle}
-                >
-                  {t('close')}
-                </Button>
-              </Box>
-            </Box>
-            <Box>
-              <Box
-                bold
-                fontSize={1.65}
-                color="#e0c090"
-                textAlign="center"
-                style={{ letterSpacing: '0' }}
-              >
-                {t('headerTitle')}
-              </Box>
-              <Box color="#c8878d" textAlign="center" mt={0.3}>
-                {roleText}
-              </Box>
-            </Box>
-            <Box>
-              <Box color="#e8d0a0" mb={0.4}>
-                {t('bloodInCup', {
-                  current: formatVitae(bloodLevel),
-                  max: formatVitae(maxBlood),
-                })}
-              </Box>
-              <ProgressBar
-                value={bloodRatio}
-                ranges={{
-                  good: [0.66, Infinity],
-                  average: [0.25, 0.66],
-                  bad: [-Infinity, 0.25],
-                }}
-              />
-              <Box color="#b99b7c" mt={0.4}>
-                {t('committed', { n: formatVitae(committedVitae) })}
-              </Box>
-              <Button
-                fluid
-                color="red"
-                mt={0.6}
-                disabled={!canDeposit}
-                onClick={() => act('deposit_blood')}
-              >
-                {isVampireUser ? t('pourBlood') : t('giveBlood')}
-              </Button>
-              <Box color="#b99b7c" mt={0.4} fontSize={0.9}>
-                {t('availableToPour', { n: formatVitae(maxCupDeposit) })}
-              </Box>
-            </Box>
-          </Box>
-          <Box style={contentGridStyle}>
-            <Section title={t('activeRituals')} fill scrollable>
-              {localizedActiveProjects.length ? (
-                localizedActiveProjects.map((project, index) => (
-                  <ActiveProjectCard
-                    key={project.ref}
-                    index={index}
-                    isLord={isLordUser}
-                    project={project}
-                    onContribute={() => act('contribute', { ref: project.ref })}
-                    onCancel={() => act('cancel_project', { ref: project.ref })}
-                    t={t}
-                  />
-                ))
-              ) : (
-                <EmptyState text={t('emptyActive')} />
-              )}
-            </Section>
-            <Section title={t('newRituals')} fill scrollable>
-              {!isVampireUser ? (
-                <Box color="#c7a97a" italic mb={1}>
-                  {t('mortalNote')}
-                </Box>
-              ) : !isLordUser ? (
-                <Box color="#c7a97a" italic mb={1}>
-                  {t('nonLordNote')}
-                </Box>
-              ) : null}
-              {hasLordProjects &&
-                localizedAvailableProjects.map((project) => (
-                  <AvailableProjectCard
-                    key={project.type_path}
-                    project={project}
-                    onStart={() =>
-                      act('start_project', { type_path: project.type_path })
-                    }
-                    t={t}
-                  />
-                ))}
-              {hasPersonalServantProject && localizedPersonalServantProject && (
-                <AvailableProjectCard
-                  key={localizedPersonalServantProject.type_path}
-                  project={localizedPersonalServantProject}
-                  onStart={() => act('summon_weak_servant')}
-                  t={t}
-                />
-              )}
-              {showLordEmptyState ? <EmptyState text={t('noRituals')} /> : null}
-            </Section>
-          </Box>
-        </Box>
-      </Window.Content>
-    </Window>
+    <Box mb={0.5}>
+      <ProgressBar value={value} maxValue={Math.max(max, 1)} color="red">
+        {`${label}: ${formatVitae(value)} / ${formatVitae(max)}`}
+      </ProgressBar>
+    </Box>
   );
 };
 
-type ProjectCopyProps = {
-  description: string;
-  mechanics?: string;
-  t: Translator;
-};
-
-const ProjectCopy = (props: ProjectCopyProps) => {
-  const { description, mechanics, t } = props;
+const RiteCopy = (props: { description: string; mechanics: string }) => {
+  const { description, mechanics } = props;
 
   return (
     <Box mt={0.7}>
       <Box style={descriptionBlockStyle}>
-        <Box style={labelStyle}>{t('description')}</Box>
+        <Box style={labelStyle}>Описание</Box>
         <Box mt={0.2} style={copyStyle}>
           {description}
         </Box>
       </Box>
       {!!mechanics && (
         <Box style={mechanicsBlockStyle}>
-          <Box style={mechanicsLabelStyle}>{t('mechanics')}</Box>
+          <Box style={mechanicsLabelStyle}>Эффект</Box>
           <Box mt={0.2} style={mechanicsStyle}>
             {mechanics}
           </Box>
@@ -572,140 +308,418 @@ const ProjectCopy = (props: ProjectCopyProps) => {
   );
 };
 
-type ActiveProjectCardProps = {
-  index: number;
-  isLord: boolean;
-  project: Project;
-  onContribute: () => void;
-  onCancel: () => void;
-  t: Translator;
-};
-
-const ActiveProjectCard = (props: ActiveProjectCardProps) => {
-  const { index, isLord, project, onContribute, onCancel, t } = props;
-  const ratio = clampRatio(project.paid / Math.max(project.cost, 1));
+const RiteCard = (props: {
+  icon: string;
+  name: string;
+  description: string;
+  mechanics: string;
+  locked: boolean;
+  buttons?: ReactNode;
+  children?: ReactNode;
+}) => {
+  const { icon, name, description, mechanics, locked, buttons, children } =
+    props;
 
   return (
-    <Box mb={1} style={activeCardStyle}>
-      <Stack align="start">
+    <Box mb={1} style={locked ? lockedParchmentStyle : parchmentStyle}>
+      <Stack align="center">
         <Stack.Item>
-          <Box style={sealStyle}>{index + 1}</Box>
+          <Seal icon={icon} />
         </Stack.Item>
         <Stack.Item grow basis={0}>
           <Box bold fontSize={1.08}>
-            {project.name} {project.accessText}
+            {name}
           </Box>
-          <ProjectCopy
-            description={project.description}
-            mechanics={project.mechanics}
-            t={t}
-          />
         </Stack.Item>
-        {isLord && (
-          <Stack.Item width="128px">
+        {!!buttons && <Stack.Item width="118px">{buttons}</Stack.Item>}
+      </Stack>
+      <RiteCopy description={description} mechanics={mechanics} />
+      {children}
+    </Box>
+  );
+};
+
+const ActiveRite = (props: { project: ActiveProject; info: ProjectInfo }) => {
+  const { project, info } = props;
+  const { act, data } = useBackend<Data>();
+  const canContribute = !project.lockedReason && project.maxContribution >= 1;
+  const contributors = project.contributors
+    .map((entry) => `${entry.name} (${formatVitae(entry.amount)})`)
+    .join(', ');
+
+  return (
+    <RiteCard
+      icon={CATEGORY_ICONS[info.category]}
+      name={info.name}
+      description={info.description}
+      mechanics={info.mechanics}
+      locked={!!project.lockedReason}
+      buttons={
+        !!data.isLord && (
+          <>
             <Button
               fluid
               color="red"
-              disabled={!project.canContribute}
-              onClick={onContribute}
+              disabled={!canContribute}
+              tooltip={getContributeTooltip(project)}
+              onClick={() => act('feed_rite', { type: project.type })}
             >
-              {t('direct')}
+              Направить
             </Button>
-            <Button fluid color="bad" mt={0.5} onClick={onCancel}>
-              {t('cancel')}
+            <Button
+              fluid
+              color="bad"
+              mt={0.5}
+              onClick={() => act('cancel_rite', { type: project.type })}
+            >
+              Отменить
             </Button>
-          </Stack.Item>
-        )}
-      </Stack>
+          </>
+        )
+      }
+    >
       <Divider />
-      <Stack>
-        <Stack.Item grow>
-          <Box>{t('required', { n: formatVitae(project.cost) })}</Box>
-          <Box>{t('collected', { n: formatVitae(project.paid) })}</Box>
-          <Box>{t('remaining', { n: formatVitae(project.remaining) })}</Box>
-        </Stack.Item>
-      </Stack>
-      <Box mt={0.8}>
-        <ProgressBar value={ratio} color="red">
-          {formatPercent(project.progress)}
-        </ProgressBar>
+      <ProgressBar
+        value={project.paid}
+        maxValue={Math.max(info.cost, 1)}
+        color="red"
+      >
+        {`${formatVitae(project.paid)} / ${formatVitae(info.cost)}`}
+      </ProgressBar>
+      <Box color="#563f37" mt={0.5}>
+        {`Осталось: ${formatVitae(Math.max(info.cost - project.paid, 0))} витэ. Из чаши: ${formatVitae(project.fromCup)}.`}
       </Box>
-      <Box color="#563f37" mt={0.5} fontSize={0.9}>
-        {t('contributors')} {project.contributorsText}
+      <Box color="#563f37" mt={0.3} fontSize={0.9}>
+        {`Отдали свою кровь: ${contributors || 'пока никто'}`}
       </Box>
-      {project.canContribute && (
-        <Box color="#563f37" mt={0.3} fontSize={0.9}>
-          {project.contributionText}
-        </Box>
-      )}
-    </Box>
+    </RiteCard>
   );
 };
 
-type AvailableProjectCardProps = {
-  project: AvailableProject;
-  onStart: () => void;
-  t: Translator;
-};
-
-const AvailableProjectCard = (props: AvailableProjectCardProps) => {
-  const { project, onStart, t } = props;
+const AvailableRite = (props: {
+  icon: string;
+  name: string;
+  description: string;
+  mechanics: string;
+  cost: number;
+  lockedReason: string | null;
+  onBegin: () => void;
+}) => {
+  const { icon, name, description, mechanics, cost, lockedReason, onBegin } =
+    props;
 
   return (
-    <Box mb={1} style={availableCardStyle}>
-      <Stack align="center">
-        <Stack.Item>
-          <Box style={sealStyle}>{project.accessSeal}</Box>
-        </Stack.Item>
-        <Stack.Item grow basis={0}>
-          <Box bold fontSize={1.08}>
-            {project.name} {project.accessText}
-          </Box>
-        </Stack.Item>
-      </Stack>
-      <ProjectCopy
-        description={project.description}
-        mechanics={project.mechanics}
-        t={t}
-      />
-      <Stack align="center" mt={0.3}>
-        <Stack.Item grow>
-          <Box color="#563f37">
-            {t('cost', { n: formatVitae(project.cost) })}
-          </Box>
-          {!project.canStart && (
-            <Box color="#6c1f25" mt={0.4} fontSize={0.9}>
-              {project.lockedReason}
-            </Box>
-          )}
-        </Stack.Item>
-        <Stack.Item width="112px">
-          <Button
-            fluid
-            color="red"
-            disabled={!project.canStart}
-            onClick={onStart}
-          >
-            {t('start')}
-          </Button>
-        </Stack.Item>
-      </Stack>
-    </Box>
+    <RiteCard
+      icon={icon}
+      name={name}
+      description={description}
+      mechanics={mechanics}
+      locked={!!lockedReason}
+      buttons={
+        <Button
+          fluid
+          color="red"
+          disabled={!!lockedReason}
+          tooltip={lockedReason || `Начать за ${formatVitae(cost)} витэ`}
+          onClick={onBegin}
+        >
+          Начать
+        </Button>
+      }
+    >
+      <Box color="#563f37" mt={0.6}>
+        {`Цена: ${formatVitae(cost)} витэ`}
+      </Box>
+    </RiteCard>
   );
 };
 
-const EmptyState = ({ text }: { text: string }) => (
-  <Box
-    italic
-    textAlign="center"
-    color="#b99b7c"
-    p={2}
-    style={{
-      border: '1px dashed #5b1b1f',
-      borderRadius: '6px',
-      background: 'rgba(24, 6, 7, 0.45)',
-    }}
-  >
-    {text}
-  </Box>
-);
+const PersonalCall = () => {
+  const { act, data } = useBackend<Data>();
+  const { personalServant, personalCallLock } = data;
+
+  return (
+    <AvailableRite
+      icon="user-plus"
+      name={personalServant.name}
+      description={personalServant.description}
+      mechanics={personalServant.mechanics}
+      cost={personalServant.cost}
+      lockedReason={personalCallLock}
+      onBegin={() => act('call_servant')}
+    />
+  );
+};
+
+const RiteColumn = (props: {
+  category: string;
+  title: string;
+  status?: ReactNode;
+  header?: ReactNode;
+  footer?: ReactNode;
+  emptyText: string;
+}) => {
+  const { category, title, status, header, footer, emptyText } = props;
+  const { act, data } = useBackend<Data>();
+  const { projects = [], activeProjects = [], availableProjects = [] } = data;
+  const infoByType = new Map(
+    projects
+      .filter((info) => info.category === category)
+      .map((info) => [info.type, info]),
+  );
+  const active = activeProjects.filter((entry) => infoByType.has(entry.type));
+  const available = availableProjects.filter((entry) =>
+    infoByType.has(entry.type),
+  );
+  const isEmpty = !active.length && !available.length && !footer;
+
+  return (
+    <Section title={title} buttons={status} fill scrollable>
+      {header}
+      {active.map((project) => (
+        <ActiveRite
+          key={project.type}
+          project={project}
+          info={infoByType.get(project.type) as ProjectInfo}
+        />
+      ))}
+      {available.map((project) => {
+        const info = infoByType.get(project.type) as ProjectInfo;
+        return (
+          <AvailableRite
+            key={project.type}
+            icon={CATEGORY_ICONS[category]}
+            name={info.name}
+            description={info.description}
+            mechanics={info.mechanics}
+            cost={info.cost}
+            lockedReason={project.lockedReason}
+            onBegin={() => act('begin_rite', { type: project.type })}
+          />
+        );
+      })}
+      {footer}
+      {isEmpty && <EmptyState text={emptyText} />}
+    </Section>
+  );
+};
+
+const SummoningColumn = () => {
+  const { data } = useBackend<Data>();
+  const { summoning, isLord, hasPersonalCall } = data;
+
+  return (
+    <RiteColumn
+      category="summoning"
+      title="Обряды призыва"
+      status={
+        !!summoning && (
+          <Box inline nowrap color="average">
+            <Icon name="hourglass-half" mr={0.5} />
+            {`Тигель зовёт: ${summoning}`}
+          </Box>
+        )
+      }
+      footer={!!hasPersonalCall && <PersonalCall />}
+      emptyText={
+        isLord
+          ? 'Доступных обрядов призыва нет.'
+          : 'Ни один обряд призыва не начат.'
+      }
+    />
+  );
+};
+
+const AscensionColumn = () => {
+  const { data } = useBackend<Data>();
+  const {
+    ascensions = 0,
+    ascensionTotal = 0,
+    capacityPerAscension = 0,
+    isLord,
+  } = data;
+
+  let emptyText = 'Ни один обряд возвышения не начат.';
+  if (ascensionTotal > 0 && ascensions >= ascensionTotal) {
+    emptyText = 'Владыка цел. Обрядов возвышения не осталось.';
+  } else if (ascensionTotal > 0 && ascensions === ascensionTotal - 1) {
+    emptyText = 'Остался последний обряд. Он погасит Солнце.';
+  } else if (isLord) {
+    emptyText = 'Доступных обрядов возвышения нет.';
+  }
+
+  return (
+    <RiteColumn
+      category="ascension"
+      title="Обряды возвышения"
+      header={
+        <Box mb={1}>
+          <ProgressBar
+            value={ascensions}
+            maxValue={Math.max(ascensionTotal, 1)}
+            color="red"
+          >
+            {`Исполнено обрядов: ${ascensions} / ${ascensionTotal}`}
+          </ProgressBar>
+          <Box mt={0.5} italic color="#c7a97a">
+            {`Каждый исполненный обряд расширяет чашу на ${formatVitae(capacityPerAscension)} витэ.`}
+          </Box>
+        </Box>
+      }
+      emptyText={emptyText}
+    />
+  );
+};
+
+const SunColumn = () => {
+  const { data } = useBackend<Data>();
+  const { sunStolen, sunRiteDone } = data;
+
+  let sunText =
+    'Солнце всё ещё правит небом. Его погасит последний обряд возвышения.';
+  if (sunStolen) {
+    sunText = 'Солнце сорвано с небес. Оно вернётся, лишь когда падёт его вор.';
+  } else if (sunRiteDone) {
+    sunText = 'Солнце вернулось. Дважды его не украсть.';
+  }
+
+  return <RiteColumn category="sun" title="Солнце" emptyText={sunText} />;
+};
+
+const MortalCrucible = () => {
+  const { act, data } = useBackend<Data>();
+  const {
+    blood = 0,
+    bloodNormal = 0,
+    vitae = 0,
+    maxVitae = 0,
+    cup = 0,
+    cupCapacity = 0,
+    maxGive = 0,
+    donationVitae = 0,
+    donationBlood = 0,
+  } = data;
+
+  return (
+    <Window width={520} height={270} theme="dark">
+      <Window.Content fitted>
+        <Box p={1} height="100%">
+          <Box p={1.5} height="100%" style={frameStyle}>
+            <Box bold fontSize={1.4} color="#e0c090" textAlign="center" mb={1}>
+              БАГРОВЫЙ ТИГЕЛЬ
+            </Box>
+            <Meter label="Моя кровь" value={blood} max={bloodNormal} />
+            <Meter label="Моя витэ" value={vitae} max={maxVitae} />
+            <Meter label="Витэ в чаше" value={cup} max={cupCapacity} />
+            <Button
+              fluid
+              color="red"
+              mt={1}
+              textAlign="center"
+              disabled={maxGive <= 0}
+              tooltip={getGiveTooltip(data)}
+              onClick={() => act('give_blood')}
+            >
+              Пожертвовать кровь
+            </Button>
+            <Box mt={1} italic color="#c7a97a">
+              {`Тигель принимает кровь в чашу: каждые ${formatVitae(donationVitae)} витэ стоят ${formatVitae(donationBlood)} крови. Обратить эту витэ на ритуалы могут только Мафусаилы.`}
+            </Box>
+          </Box>
+        </Box>
+      </Window.Content>
+    </Window>
+  );
+};
+
+const KindredCrucible = () => {
+  const { act, data } = useBackend<Data>();
+  const [expanded, toggleExpanded] = useWindowExpand(
+    WINDOW_WIDTH,
+    WINDOW_HEIGHT,
+  );
+  const {
+    vitae = 0,
+    maxVitae = 0,
+    cup = 0,
+    cupCapacity = 0,
+    maxPour = 0,
+    isLord,
+  } = data;
+
+  return (
+    <Window width={WINDOW_WIDTH} height={WINDOW_HEIGHT} theme="dark">
+      <Window.Content fitted>
+        <Box p={1} style={shellStyle}>
+          <Box style={headerGridStyle}>
+            <Box style={sealControlStyle}>
+              <Box style={sealStyle}>V</Box>
+              <Box style={windowControlStackStyle}>
+                <Button
+                  fluid
+                  color="gold"
+                  icon={expanded ? 'compress' : 'expand'}
+                  tooltip={
+                    expanded
+                      ? 'Восстановить размер окна'
+                      : 'Развернуть окно на весь экран'
+                  }
+                  tooltipPosition="right"
+                  onClick={toggleExpanded}
+                  style={windowControlButtonStyle}
+                >
+                  {expanded ? 'Свернуть' : 'Развернуть'}
+                </Button>
+                <Button
+                  fluid
+                  color="red"
+                  icon="times"
+                  tooltip="Закрыть окно"
+                  tooltipPosition="right"
+                  onClick={() => suspendStart()}
+                  style={windowControlButtonStyle}
+                >
+                  Закрыть
+                </Button>
+              </Box>
+            </Box>
+            <Box>
+              <Box bold fontSize={1.65} color="#e0c090" textAlign="center">
+                БАГРОВЫЙ ТИГЕЛЬ
+              </Box>
+              <Box color="#c8878d" textAlign="center" mt={0.3}>
+                {isLord
+                  ? 'Воля Мафусаила: я начинаю ритуалы и направляю в них чашу'
+                  : 'Каинит: я наполняю чашу, а ритуалами правит Мафусаил'}
+              </Box>
+            </Box>
+            <Box>
+              <Meter label="Моя витэ" value={vitae} max={maxVitae} />
+              <Meter label="Витэ в чаше" value={cup} max={cupCapacity} />
+              <Button
+                fluid
+                color="red"
+                textAlign="center"
+                disabled={maxPour < 1}
+                tooltip={getPourTooltip(data)}
+                onClick={() => act('pour_vitae')}
+              >
+                Влить витэ
+              </Button>
+            </Box>
+          </Box>
+          <Box style={contentGridStyle}>
+            <SummoningColumn />
+            <AscensionColumn />
+            <SunColumn />
+          </Box>
+        </Box>
+      </Window.Content>
+    </Window>
+  );
+};
+
+export const CrimsonCrucible = () => {
+  const { data } = useBackend<Data>();
+  return data.isVampire ? <KindredCrucible /> : <MortalCrucible />;
+};

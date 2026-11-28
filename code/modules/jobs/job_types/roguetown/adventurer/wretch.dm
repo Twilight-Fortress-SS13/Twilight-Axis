@@ -251,7 +251,7 @@
 	// Check for major round antagonists (lich, vampire lord, any bandits) — they lock tier 2.
 	var/major_antag_active = FALSE
 	for(var/datum/antagonist/antag as anything in GLOB.antagonists)
-		if(QDELETED(antag) || QDELETED(antag.owner))
+		if(QDELETED(antag) || QDELETED(antag.owner) || (antag.antag_flags & FLAG_ANTAG_CAP_IGNORE)) // TA EDIT
 			continue
 		if(istype(antag, /datum/antagonist/lich) || istype(antag, /datum/antagonist/vampire/lord) || istype(antag, /datum/antagonist/bandit))
 			major_antag_active = TRUE
@@ -293,7 +293,7 @@
 	var/werewolves_existed = FALSE
 	var/werewolf_threat_alive = FALSE
 	for(var/datum/antagonist/antag as anything in GLOB.antagonists)
-		if(QDELETED(antag) || QDELETED(antag.owner))
+		if(QDELETED(antag) || QDELETED(antag.owner) || (antag.antag_flags & FLAG_ANTAG_CAP_IGNORE)) // TA EDIT
 			continue
 		if(istype(antag, /datum/antagonist/lich))
 			var/datum/antagonist/lich/lich_antag = antag

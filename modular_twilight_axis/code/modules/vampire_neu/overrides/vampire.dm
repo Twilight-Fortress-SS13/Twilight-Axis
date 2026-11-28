@@ -111,6 +111,13 @@
 
 	return ..()
 
+/datum/antagonist/vampire/Destroy()
+	sire_vampire = null
+	for(var/datum/antagonist/vampire/thrall in GLOB.antagonists)
+		if(thrall.sire_vampire == src)
+			thrall.sire_vampire = null
+	return ..()
+
 /datum/antagonist/vampire/proc/get_thrall_owner()
 	if(sire_vampire && !QDELETED(sire_vampire) && !QDELETED(sire_vampire.owner))
 		return sire_vampire.get_thrall_owner()
