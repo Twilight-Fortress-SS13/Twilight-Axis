@@ -1,32 +1,39 @@
 /datum/asset/spritesheet_batched/loadout_icons
-	parent_type = /datum/asset/spritesheet
-	name = "loadout_icons"
+	// TA EDIT
+	name = "loadout_previews"
 
 /datum/asset/spritesheet_batched/loadout_icons/create_spritesheets()
-	var/list/ids = list()
-
+	// TA EDIT START
+	// TA EDIT
+	var/source_directory = "data/spritesheets/loadout_sources"
+	var/marker = "[source_directory]/.keep"
+	rustg_file_write("", marker)
+	fdel(marker)
+	var/list/source_files = list()
 	for(var/key in GLOB.loadout_items_by_name)
 		var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
-		var/atom/movable/typepath = item.path
-		var/icon_file = typepath::icon
-		var/icon_state = typepath::icon_state
-
-		if(ispath(typepath, /obj/item/enchantingkit))
-			var/obj/item/enchantingkit/kit_typepath = typepath
-			var/obj/item/result = initial(kit_typepath.result_item) || initial(kit_typepath.icon_loadout)
-			icon_file = initial(result.icon)
-			icon_state = initial(result.icon_state)
-
-		if(!icon_file || isnull(icon_state))
-			continue
-
-		var/id = sanitize_css_class_name("[typepath]")
-		if(id in ids)
-			continue
-
-		ids += id
-		Insert(id, icon_file, icon_state)
-
-/datum/asset/spritesheet_batched/loadout_icons/ModifyInserted(icon/pre_asset)
-	pre_asset.Scale(128, 128)
-	return pre_asset
+		for(var/list/layer as anything in item.get_loadout_preview_layers())
+			var/sprite_id = layer["sprite_id"]
+			if(sprite_id in entries)
+				continue
+			var/icon_file = layer["icon"]
+			var/source_name = "[icon_file]"
+			if(!(source_name in source_files))
+				// TA EDIT
+				var/source_path = "[source_directory]/[md5(source_name)].dmi"
+				if(fcopy(icon_file, source_path))
+					source_files[source_name] = source_path
+				else
+					source_files[source_name] = null
+					log_asset("Could not extract loadout preview source: [source_name]")
+			var/source_path = source_files[source_name]
+			if(!source_path)
+				continue
+			var/datum/universal_icon/preview = uni_icon(
+				icon_file, layer["icon_state"], SOUTH, 1)
+			preview.scale(40, 40)
+			insert_icon(sprite_id, preview)
+			// TA EDIT
+			var/list/entry = entries[sprite_id]
+			entry["icon_file"] = source_path
+	// TA EDIT END

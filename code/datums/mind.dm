@@ -1418,7 +1418,23 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	// Attempts to retrieve an item from a player's stash, and applies any base colors, where preferable.
 	if(user.mind && isliving(user))
 		if(user.mind.special_items && user.mind.special_items.len)
-			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
+			var/list/choices = list() // TA EDIT START
+			for(var/stash_key in user.mind.special_items)
+				var/loadout_key = stash_key
+				var/suffix = ""
+				if(copytext(stash_key, -length(TRIUMPH_STASH_SUFFIX)) == TRIUMPH_STASH_SUFFIX)
+					loadout_key = copytext(stash_key, 1, length(stash_key) - length(TRIUMPH_STASH_SUFFIX) + 1)
+					suffix = TRIUMPH_STASH_SUFFIX
+				var/datum/loadout_item/loadout_item = GLOB.loadout_items_by_name[loadout_key]
+				var/label = loadout_item ? "[loadout_item.name][suffix]" : stash_key
+				var/base_label = label
+				var/index = 2
+				while(label in choices)
+					label = "[base_label] ([index++])"
+				choices[label] = stash_key
+			var/choice = input(user, "What will I take?", "STASH") as null|anything in choices
+			var/item = choices[choice]
+			// TA EDIT END
 			if(item)
 				if(user.Adjacent(host_object))
 					if(user.mind.special_items[item])
